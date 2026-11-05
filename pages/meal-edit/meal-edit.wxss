@@ -1,0 +1,357 @@
+.page {
+  padding: 28rpx 32rpx 0;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.hover-dim { opacity: .6; }
+
+.block {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 20rpx;
+}
+
+.block.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lbl {
+  font-size: 26rpx;
+  color: var(--t2);
+}
+
+.ipt-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--t1);
+  height: 76rpx;
+  line-height: 76rpx;
+}
+
+.ipt-desc {
+  font-size: 28rpx;
+  color: var(--t2);
+  height: 60rpx;
+  line-height: 60rpx;
+}
+
+.ph { color: var(--t3); font-weight: 400; }
+
+/* 步进器 */
+.stepper {
+  display: flex;
+  align-items: center;
+}
+
+.st-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #F2F1EA;
+  color: var(--t1);
+  font-size: 34rpx;
+  line-height: 62rpx;
+  text-align: center;
+}
+
+.st-num {
+  min-width: 72rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stepper.small .st-btn {
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 54rpx;
+  font-size: 30rpx;
+}
+
+.stepper.small .st-num {
+  min-width: 60rpx;
+  font-size: 28rpx;
+}
+
+/* 标题 */
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 40rpx 4rpx 16rpx;
+}
+
+.sec-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: 1rpx;
+}
+
+.sec-hint {
+  font-size: 22rpx;
+  color: var(--t3);
+}
+
+/* 菜品卡片 */
+.dish {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 26rpx 28rpx;
+  margin-bottom: 16rpx;
+}
+
+.d-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.d-name {
+  flex: 1;
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--t1);
+}
+
+.d-del {
+  width: 56rpx;
+  text-align: center;
+  font-size: 34rpx;
+  color: var(--t3);
+}
+
+.d-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14rpx;
+}
+
+.d-kcal {
+  font-size: 24rpx;
+  color: var(--t2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 加菜 */
+.add-dish {
+  padding: 28rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--green);
+  border: 2rpx dashed #DDDCD1;
+  border-radius: 24rpx;
+}
+
+/* 汇总 */
+.sum {
+  margin-top: 36rpx;
+  background: var(--green-soft);
+  border-radius: 26rpx;
+  padding: 8rpx 32rpx;
+}
+
+.sum-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26rpx 0;
+}
+
+.sum-hr {
+  height: 1rpx;
+  background: rgba(30, 58, 37, .12);
+}
+
+.sum-lbl {
+  font-size: 26rpx;
+  color: #3A4A3C;
+}
+
+.sum-val {
+  display: flex;
+  align-items: baseline;
+}
+
+.sv-num {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: var(--green);
+  font-family: "SF Mono", "DIN Alternate", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.sv-unit {
+  font-size: 20rpx;
+  color: rgba(30, 58, 37, .6);
+  margin-left: 8rpx;
+}
+
+.del {
+  margin: 52rpx 0 0;
+  padding: 28rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--danger);
+}
+
+.space { height: 200rpx; }
+
+/* 底部 */
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18rpx 32rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 68%, rgba(244, 243, 237, 0));
+  z-index: 30;
+}
+
+.f-hover { opacity: .85; }
+
+/* ── 选菜浮层 ── */
+.mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, .42);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+  z-index: 50;
+}
+
+.mask.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg);
+  border-radius: 36rpx 36rpx 0 0;
+  transform: translateY(102%);
+  transition: transform .26s cubic-bezier(.22, 1, .36, 1);
+  z-index: 60;
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 32rpx calc(24rpx + env(safe-area-inset-bottom));
+}
+
+.sheet.up { transform: translateY(0); }
+
+.sheet-bar {
+  width: 72rpx;
+  height: 8rpx;
+  border-radius: 8rpx;
+  background: #D8D7CC;
+  margin: 20rpx auto 0;
+}
+
+.sheet-title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: var(--t1);
+  padding: 24rpx 4rpx 16rpx;
+  letter-spacing: 1rpx;
+}
+
+.sheet-body {
+  max-height: 56vh;
+}
+
+.pk {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  border-radius: 20rpx;
+  padding: 24rpx 26rpx;
+  margin-bottom: 14rpx;
+  border: 2rpx solid transparent;
+}
+
+.pk.on {
+  border-color: var(--green);
+  background: #FCFCF8;
+}
+
+.pk-main { flex: 1; }
+
+.pk-name {
+  font-size: 30rpx;
+  color: var(--t1);
+  font-weight: 500;
+}
+
+.pk-meta {
+  font-size: 22rpx;
+  color: var(--t2);
+  margin-top: 8rpx;
+}
+
+.pk-box {
+  flex: none;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  border: 2rpx solid #D6D5C9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20rpx;
+}
+
+.pk-box.on {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.pk-tick {
+  width: 18rpx;
+  height: 10rpx;
+  border-left: 3rpx solid #fff;
+  border-bottom: 3rpx solid #fff;
+  transform: rotate(-45deg) translate(1rpx, -3rpx);
+}
+
+.pk-empty {
+  padding: 80rpx 0;
+  text-align: center;
+  color: var(--t3);
+  font-size: 28rpx;
+  line-height: 2.4;
+}
+
+.link {
+  color: var(--green);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 6rpx;
+}
+
+.sheet-foot {
+  margin-top: 20rpx;
+  height: 92rpx;
+  border-radius: 999rpx;
+  background: var(--green);
+  color: #F4F3ED;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

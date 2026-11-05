@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秘密食谱 · 做饭模式</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #E7E5DF; color: #2C2A28; padding: 40px 28px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header { max-width: 900px; margin: 0 auto 12px; }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header p { margin-top: 8px; font-size: 12px; line-height: 1.75; color: #837C72; }
+
+  .grid { display: flex; flex-wrap: wrap; gap: 40px 34px; justify-content: center; max-width: 900px; margin: 30px auto 0; }
+  .col { flex: 0 0 auto; }
+  .colhead { margin-bottom: 11px; }
+  .colhead .tag {
+    display: inline-block; font-size: 9.5px; font-weight: 700; letter-spacing: .8px;
+    color: #fff; background: #1E3A25; padding: 2px 6px; border-radius: 4px; margin-right: 6px; vertical-align: 1.5px;
+  }
+  .colhead b { font-size: 13px; font-weight: 600; }
+  .colhead small { display: block; margin-top: 4px; font-size: 10.5px; color: #968F85; }
+
+  .phone {
+    width: 375px; height: 700px; zoom: 0.76; border-radius: 34px; border: 1px solid rgba(0,0,0,.07);
+    box-shadow: 0 10px 28px rgba(0,0,0,.09); overflow: hidden; position: relative;
+    display: flex; flex-direction: column; background: #F4F3ED; color: #1C1C19;
+  }
+  .phone.dark { background: #1E3A25; color: #F1EFE4; }
+
+  .statusbar { height: 40px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 11.5px; font-weight: 600; }
+  .dots { display: flex; gap: 4px; align-items: center; }
+  .dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .7; }
+  .dots .batt { width: 17px; height: 8px; border-radius: 2px; border: 1px solid currentColor; opacity: .55; position: relative; }
+  .dots .batt::after { content:""; position:absolute; inset:1.5px; background: currentColor; border-radius:1px; }
+
+  .navbar { height: 42px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 15px; font-weight: 600; }
+  .scroll { flex: 1; overflow: hidden; padding: 0 20px; }
+
+  /* ══════ 详情页（底部改版） ══════ */
+  .heroimg { height: 190px; margin: 0 -20px; overflow: hidden; position: relative; }
+  .heroimg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; }
+  .heroimg .back { position: absolute; top: 14px; left: 18px; width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.88); }
+  .heroimg .back::before { content:""; position:absolute; width:8px; height:8px; border-left:2px solid #1E3A25; border-bottom:2px solid #1E3A25; transform: rotate(45deg); top:12px; left:13px; }
+
+  .dtitle { padding: 15px 0 13px; }
+  .dtitle h2 { font-size: 21px; font-weight: 700; letter-spacing: -.4px; }
+  .dtitle .sm { margin-top: 6px; font-size: 11px; color: #8C8B81; }
+
+  .kcalbox { background: #DDE4D2; border-radius: 16px; padding: 13px 15px; display: flex; align-items: center; gap: 13px; margin-bottom: 16px; }
+  .kcalbox .big { font-size: 23px; font-weight: 700; letter-spacing: -.7px; color: #1E3A25; line-height: 1; }
+  .kcalbox .lbl { font-size: 9px; color: #5E6E56; margin-top: 5px; }
+  .kcalbox .divider { width: 1px; align-self: stretch; background: rgba(30,58,37,.16); }
+  .kcalbox .warn { margin-left: auto; font-size: 9px; color: #6C7A63; text-align: right; line-height: 1.5; }
+
+  .sect { margin-bottom: 16px; }
+  .sect > .st { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .sect > .st h3 { font-size: 13.5px; font-weight: 700; }
+  .sect > .st span { font-size: 9.5px; color: #A0A196; }
+  .grp { margin-bottom: 9px; }
+  .grp .gt { font-size: 10px; font-weight: 600; color: #6C7A63; letter-spacing: .4px; margin-bottom: 4px; }
+  .ing { display: flex; align-items: center; padding: 6px 0; border-bottom: 1px solid #F0EFE7; font-size: 12.5px; }
+  .ing:last-child { border-bottom: none; }
+  .ing .n { flex: 1; }
+  .ing .q { color: #1E3A25; font-weight: 600; }
+  .ing .q.dim { color: #A8A99E; font-weight: 400; }
+  .ing .c { width: 48px; text-align: right; font-size: 10.5px; color: #A8A99E; }
+
+  .bottom { flex: 0 0 auto; display: flex; gap: 9px; padding: 11px 20px 19px; background: linear-gradient(to top, #F4F3ED 68%, rgba(244,243,237,0)); }
+  .btn { height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+  .btn.ghost { background: #fff; color: #1E3A25; border: 1px solid #E1E2D6; flex: 0 0 108px; font-size: 13.5px; }
+  .btn.solid { background: #1E3A25; color: #fff; flex: 1; font-size: 15px; letter-spacing: 2px; }
+
+  /* ══════ 做饭模式 ══════ */
+  .cm-top { flex: 0 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 52px; }
+  .cm-exit { width: 32px; height: 32px; border-radius: 50%; background: rgba(241,239,228,.1); position: relative; }
+  .cm-exit::before, .cm-exit::after { content:""; position:absolute; background:#F1EFE4; height:1.6px; width:14px; top:15px; left:9px; border-radius:1px; }
+  .cm-exit::before { transform: rotate(45deg); } .cm-exit::after { transform: rotate(-45deg); }
+  .cm-count { font-size: 12px; letter-spacing: 1px; color: #8FA091; font-variant-numeric: tabular-nums; }
+  .cm-count b { color: #F1EFE4; font-size: 14px; font-weight: 700; }
+  .cm-mat { font-size: 12px; color: #DDE4D2; border: 1px solid rgba(221,228,210,.34); padding: 5px 11px; border-radius: 999px; }
+  .cm-tools { display: flex; gap: 8px; align-items: center; }
+  .cm-aa { font-size: 11.5px; font-weight: 600; color: #9FAF9D; border: 1px solid rgba(241,239,228,.22); padding: 5px 10px; border-radius: 999px; }
+  .heroimg .edit {
+    position: absolute; top: 14px; right: 18px; height: 32px; padding: 0 14px; border-radius: 16px;
+    background: rgba(255,255,255,.9); font-size: 12.5px; font-weight: 600; color: #1E3A25;
+    display: flex; align-items: center; letter-spacing: .5px;
+  }
+
+  .cm-progress { flex: 0 0 auto; height: 2px; background: rgba(241,239,228,.12); margin: 0 20px 22px; border-radius: 2px; overflow: hidden; }
+  .cm-progress i { display: block; height: 100%; width: 40%; background: #DDE4D2; }
+
+  .cm-body { flex: 1; padding: 0 26px; display: flex; flex-direction: column; justify-content: center; }
+  .cm-step-no { font-size: 11px; letter-spacing: 3px; color: #7E907F; margin-bottom: 16px; text-transform: uppercase; }
+  .cm-text { font-size: 24px; line-height: 1.72; font-weight: 500; letter-spacing: -.2px; color: #F6F4E9; }
+  .cm-text em { font-style: normal; color: #DDE4D2; font-weight: 700; }
+  .cm-hint { margin-top: 22px; font-size: 11.5px; color: #7E907F; line-height: 1.7; }
+
+  .cm-bottom { flex: 0 0 auto; display: flex; gap: 10px; padding: 0 22px 26px; }
+  .cm-btn { height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 600; }
+  .cm-btn.prev { flex: 0 0 110px; background: rgba(241,239,228,.09); color: #A9B8A8; }
+  .cm-btn.next { flex: 1; background: #DDE4D2; color: #1E3A25; }
+
+  .cm-dots { display: flex; gap: 5px; justify-content: center; padding-bottom: 14px; }
+  .cm-dots i { width: 5px; height: 5px; border-radius: 50%; background: rgba(241,239,228,.24); display: block; }
+  .cm-dots i.on { background: #DDE4D2; width: 16px; border-radius: 3px; }
+
+  /* ══════ 用料浮层 ══════ */
+  .sheet-mask { position: absolute; inset: 0; background: rgba(10,25,15,.42); }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; background: #F6F5EC; border-radius: 22px 22px 0 0;
+    padding: 10px 22px 26px; max-height: 74%; overflow: hidden; color: #1C1C19;
+    box-shadow: 0 -8px 30px rgba(0,0,0,.2);
+  }
+  .sheet .handle { width: 34px; height: 4px; border-radius: 2px; background: #D8D7C9; margin: 0 auto 14px; }
+  .sheet h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .sheet .sub { font-size: 10.5px; color: #8C8B81; margin-bottom: 14px; }
+  .sheet .gt { font-size: 10px; font-weight: 700; color: #6C7A63; letter-spacing: .5px; margin: 12px 0 5px; }
+  .sheet .ing { display: flex; align-items: center; padding: 7px 0; border-bottom: 1px solid #ECEBE0; font-size: 13px; }
+  .sheet .ing:last-child { border-bottom: none; }
+  .sheet .ing .n { flex: 1; }
+  .sheet .ing .q { color: #1E3A25; font-weight: 600; }
+  .sheet .ing .q.dim { color: #A8A99E; font-weight: 400; }
+
+  /* ══════ 完成页 ══════ */
+  .done { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 34px; text-align: center; }
+  .done .ring {
+    width: 96px; height: 96px; border-radius: 50%; background: rgba(221,228,210,.12); border: 1.5px solid rgba(221,228,210,.3);
+    display: flex; align-items: center; justify-content: center; margin-bottom: 28px; position: relative;
+  }
+  .done .ring::before { content:""; width: 26px; height: 13px; border-left: 3px solid #DDE4D2; border-bottom: 3px solid #DDE4D2; transform: rotate(-45deg) translate(2px,-2px); }
+  .done h2 { font-size: 25px; font-weight: 700; letter-spacing: -.4px; color: #F6F4E9; }
+  .done p { margin-top: 12px; font-size: 12.5px; color: #8FA091; line-height: 1.75; }
+  .done .act { margin-top: 34px; width: 100%; display: flex; flex-direction: column; gap: 10px; }
+  .done .b1 { height: 50px; border-radius: 14px; background: #DDE4D2; color: #1E3A25; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; }
+  .done .b2 { height: 46px; border-radius: 14px; color: #A9B8A8; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+
+  .note { max-width: 900px; margin: 46px auto 0; background: #fff; border: 1px solid #E4E0D9; border-radius: 12px; padding: 20px 22px; }
+  .note h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .note p { font-size: 12px; line-height: 1.8; color: #77706A; }
+  .note p + p { margin-top: 8px; }
+  .note b { color: #45403A; }
+  .note ul { margin: 8px 0 0 18px; }
+  .note li { font-size: 12px; line-height: 1.85; color: #77706A; }
+  .foot { max-width: 900px; margin: 20px auto 0; font-size: 11px; color: #9C958B; line-height: 1.85; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>做饭模式</h1>
+  <p>从详情页的「开火」进去，整屏翻转成深墨绿 —— 一进去就知道换模式了。只有字，没有图，一步一屏，左右滑。目标是「手机搁在台面上、隔着半米、手上有油」也能看清、也能翻页。</p>
+</header>
+
+<div class="grid">
+
+  <!-- ═══════ A 详情页 · 底部改版 ═══════ -->
+  <section class="col">
+    <div class="colhead"><span class="tag">A</span><b>详情页 · 底部改版</b><small>主按钮「开火」，计数降为次按钮</small></div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="scroll" style="padding-top:0;">
+        <div class="heroimg"><img src="food-01.jpg" alt=""><div class="back"></div><div class="edit">编辑</div></div>
+        <div class="dtitle"><h2>黑胡椒牛肉意面</h2><div class="sm">面食 · 做过 5 次 · 2 人份 · 3 天前</div></div>
+
+        <div class="kcalbox">
+          <div><div class="big">480</div><div class="lbl">kcal / 份</div></div>
+          <div class="divider"></div>
+          <div><div class="big" style="font-size:18px;">≈960</div><div class="lbl">整锅 2 人份</div></div>
+          <div class="warn">3 项未计量<br>未计入</div>
+        </div>
+
+        <div class="sect">
+          <div class="st"><h3>用料</h3><span>共 12 项</span></div>
+          <div class="grp"><div class="gt">配料</div>
+            <div class="ing"><span class="n">青红椒</span><span class="q dim">适量</span><span class="c">—</span></div>
+            <div class="ing"><span class="n">牛肉</span><span class="q">200 g</span><span class="c">310</span></div>
+          </div>
+          <div class="grp"><div class="gt">料汁（一人份）</div>
+            <div class="ing"><span class="n">生抽</span><span class="q">2 勺</span><span class="c">19</span></div>
+            <div class="ing"><span class="n">老抽</span><span class="q">半勺</span><span class="c">6</span></div>
+            <div class="ing"><span class="n">蚝油</span><span class="q">八分勺</span><span class="c">9</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="btn ghost">熟练度 +1</div>
+        <div class="btn solid">开 火</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ B 做饭模式 · 步骤 ═══════ -->
+  <section class="col">
+    <div class="colhead"><span class="tag">B</span><b>做饭模式 · 步骤</b><small>一步一屏，24px 大字，无图</small></div>
+    <div class="phone dark">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="cm-top">
+        <div class="cm-exit"></div>
+        <div class="cm-count"><b>2</b> / 5</div>
+        <div class="cm-tools"><div class="cm-aa">字号</div><div class="cm-mat">用料</div></div>
+      </div>
+      <div class="cm-progress"><i></i></div>
+
+      <div class="cm-body">
+        <div class="cm-step-no">STEP 2</div>
+        <div class="cm-text">意面下锅煮 <em>8 分钟</em>，捞出沥干，留半碗煮面水。</div>
+        <div class="cm-hint">水开后再下，加一勺盐。</div>
+      </div>
+
+      <div class="cm-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="cm-bottom">
+        <div class="cm-btn prev">上一步</div>
+        <div class="cm-btn next">下一步</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ C 用料浮层 ═══════ -->
+  <section class="col">
+    <div class="colhead"><span class="tag">C</span><b>做饭模式 · 用料浮层</b><small>随时拉出来查，不用退回详情页</small></div>
+    <div class="phone dark">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="cm-top">
+        <div class="cm-exit"></div>
+        <div class="cm-count"><b>5</b> / 5</div>
+        <div class="cm-mat">用料</div>
+      </div>
+      <div class="cm-progress"><i style="width:100%"></i></div>
+
+      <div class="cm-body">
+        <div class="cm-step-no">STEP 5</div>
+        <div class="cm-text">下意面，淋料汁，大火收到浓稠，出锅。</div>
+      </div>
+
+      <div class="sheet-mask"></div>
+      <div class="sheet">
+        <div class="handle"></div>
+        <h4>全部用料</h4>
+        <div class="sub">黑胡椒牛肉意面 · 2 人份</div>
+
+        <div class="gt">配料</div>
+        <div class="ing"><span class="n">青红椒</span><span class="q dim">适量</span></div>
+        <div class="ing"><span class="n">洋葱</span><span class="q dim">适量</span></div>
+        <div class="ing"><span class="n">蒜片</span><span class="q dim">适量</span></div>
+        <div class="ing"><span class="n">牛肉</span><span class="q">200 g</span></div>
+
+        <div class="gt">料汁（一人份）</div>
+        <div class="ing"><span class="n">生抽</span><span class="q">2 勺</span></div>
+        <div class="ing"><span class="n">老抽</span><span class="q">半勺</span></div>
+        <div class="ing"><span class="n">蚝油</span><span class="q">八分勺</span></div>
+        <div class="ing"><span class="n">糖</span><span class="q">半勺</span></div>
+        <div class="ing"><span class="n">黑胡椒粉</span><span class="q">1 勺</span></div>
+        <div class="ing"><span class="n">水</span><span class="q">半碗</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ D 完成页 ═══════ -->
+  <section class="col">
+    <div class="colhead"><span class="tag">D</span><b>做完 · 收尾</b><small>顺手把「做过一次」记掉</small></div>
+    <div class="phone dark">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="cm-top"><div class="cm-exit"></div><div style="width:32px;"></div><div style="width:56px;"></div></div>
+
+      <div class="done">
+        <div class="ring"></div>
+        <h2>这下可以吃了</h2>
+        <p>5 个步骤走完了<br>锅还在灶上，别忘了关火</p>
+        <div class="act">
+          <div class="b1">熟练度 +1</div>
+          <div class="b2">回到菜谱</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="note">
+  <h3>做饭模式为什么这么设计</h3>
+  <p><b>整屏翻转成深墨绿。</b>不是为了好看 —— 是为了让你一眼知道「现在不是看菜谱，是在做饭」。浅色页面和详情页长得太像，切进去会犹豫。深色还有个副作用：夜里做饭不刺眼，OLED 屏更省电。</p>
+  <p><b>24px 大字 + 一步一屏。</b>你的原话「下面还得滚动页面查看」是核心痛点。滚动会打断手上的活。一步一屏，一次只处理一件事，滑一下就是下一步。</p>
+  <p><b>滑动 + 按钮双通道。</b>手上有油的时候，滑动手势经常识别不准（尤其屏幕沾水）。所以底部常驻「上一步 / 下一步」大按钮，两条路都能走。</p>
+  <p><b>「用料」常驻在右上。</b>你这道菜的料汁是单独一组的，步骤里只说「淋料汁」。做到第 5 步的时候你肯定想再看一眼比例 —— 所以用料浮层随时能拉出来，不用退出模式、不用返回详情页。</p>
+  <p><b>完成页顺手计数。</b>做完菜的那一刻是唯一还记得点「熟练度 +1」的时刻。错过了，你也不会专门回去补记。</p>
+</div>
+
+<div class="note" style="margin-top:18px;">
+  <h3>三个实现层面的事，现在定比以后改省事</h3>
+  <ul>
+    <li><b>屏幕常亮。</b>进模式自动 <code>setKeepScreenOn(true)</code>，退出时还原。不做这个，你看两眼屏幕就黑了，手上还沾着面粉没法解锁。</li>
+    <li><b>字号可调。</b>24px 对多数人够，但你要是把手机搁得远，可能需要再大一档。建议顶部留一个隐藏的字号切换（长按文字区域切换 24 / 28px）。</li>
+    <li><b>计时器要不要做。</b>你这道菜有「煮 8 分钟」。可以在识别到步骤里的分钟数时，给一个可点的倒计时小按钮。但这是额外功能，会拖长工期 —— 我倾向第一版不做，先跑通主流程。</li>
+  </ul>
+</div>
+
+<div class="note" style="margin-top:18px;">
+  <h3>计数按钮文案：已定为「熟练度 +1」</h3>
+  <ul>
+    <li><b>熟练度 +1</b>（采用）— 把做菜当练技能，和「做过 5 次」的计数逻辑同一套隐喻</li>
+    <li>又整一锅 — 东北话，最顺口，但少了点巧劲</li>
+    <li>这菜我熟 — 双关（我熟悉这道菜 / 菜熟了），第一次做时点它有点虚</li>
+    <li>又没管住手 — 自嘲，跟旁边 480 kcal 有反差幽默</li>
+  </ul>
+</div>
+
+<p class="foot">
+  四个屏都是 375pt 宽模拟、缩放 76%。深色屏的真机效果会比这个更沉一点（HTML 的墨绿在 LCD 上会偏亮）。<br>
+  步骤文案里的「8 分钟」做了浅豆绿高亮 —— 这是靠录入时用标记符号实现的，也可以是自动识别数字 + 单位，后者更省事但要处理误判。
+</p>
+
+</body>
+</html>

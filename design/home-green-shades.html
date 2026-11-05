@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秘密食谱 · 浅绿的三种用法</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #E7E5DF;
+    color: #2C2A28;
+    padding: 40px 28px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header { max-width: 900px; margin: 0 auto 30px; }
+  header h1 { font-size: 20px; font-weight: 600; }
+  header p { margin-top: 8px; font-size: 12px; line-height: 1.75; color: #837C72; }
+
+  .palette { max-width: 900px; margin: 0 auto 34px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .palette div { flex: 1; min-width: 120px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,.07); background: #fff; }
+  .palette .sw { height: 44px; }
+  .palette .lb { padding: 7px 9px 8px; font-size: 10px; line-height: 1.5; color: #8A837A; }
+  .palette .lb b { display: block; font-size: 10.5px; color: #3C3730; font-weight: 600; }
+
+  .stage { display: flex; gap: 30px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .col { flex: 0 0 auto; }
+  .colhead { margin-bottom: 11px; }
+  .colhead .tag {
+    display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 1.1px;
+    color: #fff; background: #1E3A25; padding: 2px 6px; border-radius: 4px; margin-right: 7px;
+    vertical-align: 1.5px;
+  }
+  .colhead b { font-size: 13.5px; font-weight: 600; }
+  .colhead small { display: block; margin-top: 5px; font-size: 10.5px; color: #968F85; }
+
+  .phone {
+    width: 375px; height: 700px; zoom: 0.72;
+    border-radius: 34px; border: 1px solid rgba(0,0,0,.07);
+    box-shadow: 0 10px 28px rgba(0,0,0,.09);
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+    background: var(--bg); color: var(--text1);
+  }
+  .statusbar { height: 42px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 12px; font-weight: 600; }
+  .dots { display: flex; gap: 4px; align-items: center; }
+  .dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .7; }
+  .dots .batt { width: 18px; height: 8px; border-radius: 2px; border: 1px solid currentColor; opacity: .55; position: relative; }
+  .dots .batt::after { content:""; position:absolute; inset:1.5px; background: currentColor; border-radius:1px; }
+
+  .navbar { height: 44px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .navbar .t { font-size: 16px; font-weight: 600; }
+  .navbar .gear { width: 19px; height: 19px; border-radius: 50%; border: 1.6px solid currentColor; opacity: .34; position: relative; }
+  .navbar .gear::after { content:""; position:absolute; inset:5px; border-radius:50%; background: currentColor; }
+
+  .scroll { flex: 1; overflow: hidden; padding: 0 20px; }
+  .hero { padding: 8px 0 17px; }
+  .hero .h1 { font-size: 26px; font-weight: 700; letter-spacing: -.6px; line-height: 1.22; }
+  .hero .h2 { margin-top: 7px; font-size: 12px; color: var(--text2); }
+
+  .tabs { display: flex; gap: 22px; align-items: baseline; margin-bottom: 14px; }
+  .tabs span { font-size: 15px; font-weight: 500; position: relative; padding-bottom: 7px; color: var(--text2); }
+  .tabs span.on { font-weight: 700; color: var(--primary); }
+  .tabs span.on::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2.5px; border-radius:2px; background: var(--primary); }
+
+  .cats { display: flex; gap: 8px; margin-bottom: 17px; }
+  .chip { flex: 0 0 auto; font-size: 12px; padding: 6px 13px; border-radius: 999px; line-height: 1.3; background: var(--chipbg); color: var(--chiptx); border: 1px solid var(--chipline); }
+  .chip.on { background: var(--chiponbg); color: var(--chipontx); border-color: var(--chiponbg); }
+
+  .card { background: var(--card); border-radius: 20px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 1px 2px rgba(40,30,20,.045), 0 7px 20px rgba(40,30,20,.06); }
+  .photo { height: 150px; overflow: hidden; background: #DDD; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pos1 { object-position: 50% 54%; }
+  .pos2 { object-position: 50% 16%; }
+
+  .row { display: flex; align-items: center; padding: 13px 16px 15px; gap: 12px; background: var(--rowbg); }
+  .left { flex: 1; min-width: 0; }
+  .name { font-size: 17px; font-weight: 600; letter-spacing: -.2px; line-height: 1.3; color: var(--nametx); }
+  .meta { margin-top: 6px; font-size: 11px; color: var(--metatx); }
+  .kcal { flex: 0 0 auto; text-align: right; }
+  .kcal .n { font-size: 19px; font-weight: 700; letter-spacing: -.5px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .kcal .u { display: block; margin-top: 3px; font-size: 9px; color: var(--metatx); }
+
+  .k-low  { color: #4E7A43; }
+  .k-mid  { color: #D2712F; }
+  .k-high { color: #A8382A; }
+
+  .fab { position: absolute; right: 22px; bottom: 26px; width: 52px; height: 52px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(30,30,20,.24); }
+  .fab::before, .fab::after { content:""; position:absolute; background:#fff; border-radius:2px; }
+  .fab::before { width: 18px; height: 2px; }
+  .fab::after { width: 2px; height: 18px; }
+
+  /* ─── A：浅绿铺在卡片文字区 ─── */
+  .t-a {
+    --bg: #F3F2EC; --card: #FFFFFF; --primary: #1E3A25;
+    --text1: #1C1C19; --text2: #8C8B81;
+    --chipbg: #FFFFFF; --chiptx: #8C8B81; --chipline: #E3E1D6;
+    --chiponbg: #1E3A25; --chipontx: #FFFFFF;
+    --rowbg: #DDE4D2; --nametx: #1E3A25; --metatx: #6C7A63;
+  }
+  /* ─── B：浅绿铺满页面底 ─── */
+  .t-b {
+    --bg: #E3E8D7; --card: #FFFFFF; --primary: #1E3A25;
+    --text1: #1C1C19; --text2: #7B8471;
+    --chipbg: #F6F7F1; --chiptx: #7B8471; --chipline: #D6DDC6;
+    --chiponbg: #1E3A25; --chipontx: #FFFFFF;
+    --rowbg: #FFFFFF; --nametx: #1C1C19; --metatx: #8C8B81;
+  }
+  /* ─── C：浅绿只做选中态 ─── */
+  .t-c {
+    --bg: #F4F3ED; --card: #FFFFFF; --primary: #1E3A25;
+    --text1: #1C1C19; --text2: #8C8B81;
+    --chipbg: #FFFFFF; --chiptx: #7C8576; --chipline: #E1E2D6;
+    --chiponbg: #DDE4D2; --chipontx: #1E3A25;
+    --rowbg: #FFFFFF; --nametx: #1C1C19; --metatx: #8C8B81;
+  }
+
+  .notes { max-width: 1040px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+  .note { background: #fff; border: 1px solid #E4E0D9; border-radius: 12px; padding: 17px 19px; }
+  .note h3 { font-size: 12.5px; font-weight: 700; margin-bottom: 8px; }
+  .note p { font-size: 11.5px; line-height: 1.8; color: #77706A; }
+  .note p + p { margin-top: 7px; }
+  .note b { color: #45403A; }
+  .foot { max-width: 1040px; margin: 22px auto 0; font-size: 11px; color: #9C958B; line-height: 1.85; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>浅豆绿的三种用法</h1>
+  <p>同一个色板，只改浅绿（<code>#DDE4D2</code>）铺开的面积。深墨绿始终用在文字、图标、悬浮按钮上，米色是中间调，橙色只在热量数字和少量标记上出现。</p>
+</header>
+
+<div class="palette">
+  <div><div class="sw" style="background:#DDE4D2"></div><div class="lb"><b>#DDE4D2</b>浅豆绿 · 面</div></div>
+  <div><div class="sw" style="background:#1E3A25"></div><div class="lb"><b>#1E3A25</b>深墨绿 · 字/控件</div></div>
+  <div><div class="sw" style="background:#F4F3ED"></div><div class="lb"><b>#F4F3ED</b>暖米 · 底</div></div>
+  <div><div class="sw" style="background:#D2712F"></div><div class="lb"><b>#D2712F</b>橙 · 强调</div></div>
+  <div><div class="sw" style="background:#4E7A43"></div><div class="lb"><b>#4E7A43</b>低热量</div></div>
+</div>
+
+<div class="stage">
+
+  <!-- ═════════ A ═════════ -->
+  <section class="col">
+    <div class="colhead"><span class="tag">A</span><b>浅绿铺在卡片文字区</b>
+      <small>照片保持干净，信息块整片浅绿</small></div>
+    <div class="phone t-a">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero"><div class="h1">今天做点什么</div><div class="h2">18 道菜 · 3 桌搭配</div></div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats"><span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">面食</span></div>
+        <div class="card">
+          <div class="photo"><img class="pos1" src="food-01.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">黑胡椒牛肉意面</div><div class="meta">面食 · 做过 5 次 · 2 人份</div></div>
+            <div class="kcal"><div class="n k-high">520</div><span class="u">kcal / 份</span></div></div>
+        </div>
+        <div class="card">
+          <div class="photo"><img class="pos2" src="food-02.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">荠菜香菇包</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-low">182</div><span class="u">kcal / 份</span></div></div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+  <!-- ═════════ B ═════════ -->
+  <section class="col">
+    <div class="colhead"><span class="tag">B</span><b>浅绿铺满页面底</b>
+      <small>整屏绿调，卡片白色浮在上面</small></div>
+    <div class="phone t-b">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero"><div class="h1">今天做点什么</div><div class="h2">18 道菜 · 3 桌搭配</div></div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats"><span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">面食</span></div>
+        <div class="card">
+          <div class="photo"><img class="pos1" src="food-01.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">黑胡椒牛肉意面</div><div class="meta">面食 · 做过 5 次 · 2 人份</div></div>
+            <div class="kcal"><div class="n k-high">520</div><span class="u">kcal / 份</span></div></div>
+        </div>
+        <div class="card">
+          <div class="photo"><img class="pos2" src="food-02.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">荠菜香菇包</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-low">182</div><span class="u">kcal / 份</span></div></div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+  <!-- ═════════ C ═════════ -->
+  <section class="col">
+    <div class="colhead"><span class="tag">C</span><b>浅绿只做选中态</b>
+      <small>页面极素，绿只在交互反馈里出现</small></div>
+    <div class="phone t-c">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero"><div class="h1">今天做点什么</div><div class="h2">18 道菜 · 3 桌搭配</div></div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats"><span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">面食</span></div>
+        <div class="card">
+          <div class="photo"><img class="pos1" src="food-01.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">黑胡椒牛肉意面</div><div class="meta">面食 · 做过 5 次 · 2 人份</div></div>
+            <div class="kcal"><div class="n k-high">520</div><span class="u">kcal / 份</span></div></div>
+        </div>
+        <div class="card">
+          <div class="photo"><img class="pos2" src="food-02.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">荠菜香菇包</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-low">182</div><span class="u">kcal / 份</span></div></div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="notes">
+  <div class="note">
+    <h3>A · 文字区浅绿</h3>
+    <p>照片区纯白，信息区整片豆绿。菜名用深墨绿，和浅绿底是一家人。</p>
+    <p><b>好处：</b>绿色面积够大，你要的「绿的感觉」在；同时照片完全不被染色。</p>
+    <p><b>问题：</b>每张卡都像被切成两截，列表下刷时绿色块会连成一条条横带，节奏碎。</p>
+  </div>
+  <div class="note">
+    <h3>B · 底色浅绿</h3>
+    <p>整屏铺满豆绿，卡片白色浮起来，有层次。</p>
+    <p><b>好处：</b>最「绿」，一眼就是你的风格；卡片白底让照片和文字都干净。</p>
+    <p><b>问题：</b>大面积绿会往回「染色」——白盘子和包子的白，看着会有点发绿。做菜时看久了眼睛累。</p>
+  </div>
+  <div class="note">
+    <h3>C · 只做选中态</h3>
+    <p>页面底色还是暖米，浅绿只出现在「全部」这个选中的分类上。</p>
+    <p><b>好处：</b>最干净，照片最准，长期看不累。</p>
+    <p><b>问题：</b>绿太少了，你可能觉得「这不是我想要的绿」。它的绿只在小圆角方块里露一小脸。</p>
+  </div>
+</div>
+
+<p class="foot">
+  三个版本的照片、文案、布局完全一致，只有浅绿的铺开面积不同。悬浮按钮三版都是深墨绿。<br>
+  阴影统一用中性灰棕，避免绿色底上出现脏边。
+</p>
+
+</body>
+</html>

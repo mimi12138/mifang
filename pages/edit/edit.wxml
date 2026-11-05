@@ -1,0 +1,238 @@
+<view class="page">
+
+  <!-- 封面 -->
+  <view class="cover" bindtap="pickCover">
+    <image wx:if="{{recipe.cover}}" class="cover-img" src="{{recipe.cover}}" mode="aspectFill" />
+    <view wx:else class="cover-empty">
+      <view class="ce-plus">+</view>
+      <view class="ce-text">加张封面</view>
+    </view>
+    <view class="cover-tag" wx:if="{{recipe.cover}}" catchtap="removeCover">换一张</view>
+  </view>
+
+  <!-- 从文字导入 -->
+  <view class="imp-bar" wx:if="{{isNew}}" bindtap="openImport" hover-class="hover-dim">
+    <view class="imp-txt">
+      <view class="imp-t1">粘贴一段菜谱文字</view>
+      <view class="imp-t2">自动拆成用料和步骤，你再改</view>
+    </view>
+    <view class="imp-go">导入 ›</view>
+  </view>
+
+  <!-- 基本信息 -->
+  <view class="block">
+    <input
+      class="ipt-name"
+      value="{{recipe.name}}"
+      bindinput="onName"
+      placeholder="菜名"
+      placeholder-class="ph"
+      maxlength="30"
+    />
+    <input
+      class="ipt-desc"
+      value="{{recipe.desc}}"
+      bindinput="onDesc"
+      placeholder="一句话描述，可不填"
+      placeholder-class="ph"
+      maxlength="50"
+    />
+  </view>
+
+  <!-- 分类 -->
+  <view class="block">
+    <view class="lbl">分类</view>
+    <view class="chips">
+      <view
+        class="chip {{recipe.category === item ? 'on' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="*this"
+        data-c="{{item}}"
+        bindtap="pickCat"
+      >{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 份数 -->
+  <view class="block row">
+    <view class="lbl">几人份</view>
+    <view class="stepper">
+      <view class="st-btn" bindtap="decServ" hover-class="hover-dim">−</view>
+      <view class="st-num">{{recipe.servings}}</view>
+      <view class="st-btn" bindtap="incServ" hover-class="hover-dim">+</view>
+    </view>
+  </view>
+
+  <!-- 标签 -->
+  <view class="block">
+    <view class="lbl">标签</view>
+    <view class="tags">
+      <view class="tag" wx:for="{{recipe.tags}}" wx:key="*this">
+        <text>{{item}}</text>
+        <text class="tag-x" data-t="{{item}}" catchtap="delTag">×</text>
+      </view>
+      <input
+        class="tag-ipt"
+        value="{{tagInput}}"
+        bindinput="onTagInput"
+        bindconfirm="addTag"
+        bindblur="addTag"
+        placeholder="加标签"
+        placeholder-class="ph"
+        confirm-type="done"
+      />
+    </view>
+  </view>
+
+  <!-- 用料 -->
+  <view class="sec-head">
+    <view class="sec-title">用料</view>
+    <view class="sec-hint">算不出的显示 —，不影响保存</view>
+  </view>
+
+  <view class="group" wx:for="{{recipe.groups}}" wx:for-item="g" wx:for-index="gi" wx:key="id">
+    <view class="g-head" wx:if="{{recipe.groups.length > 1}}">
+      <input
+        class="g-name"
+        value="{{g.name}}"
+        data-gi="{{gi}}"
+        bindinput="onGroupName"
+        placeholder="这组叫什么，如 腌制"
+        placeholder-class="ph"
+        maxlength="12"
+      />
+      <view class="g-acts">
+        <view
+          class="g-mv {{gi === 0 ? 'off' : ''}}"
+          data-gi="{{gi}}"
+          data-dir="-1"
+          catchtap="moveGroup"
+          hover-class="g-mv-hover"
+        ><view class="arw up"></view></view>
+        <view
+          class="g-mv {{gi === recipe.groups.length - 1 ? 'off' : ''}}"
+          data-gi="{{gi}}"
+          data-dir="1"
+          catchtap="moveGroup"
+          hover-class="g-mv-hover"
+        ><view class="arw down"></view></view>
+        <view class="g-del" data-gi="{{gi}}" catchtap="delGroup" hover-class="hover-dim">
+          <view class="trash"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="item {{ii === 0 ? 'first' : ''}}" wx:for="{{g.items}}" wx:for-item="it" wx:for-index="ii" wx:key="id">
+      <view class="i-top">
+        <textarea
+          class="i-name"
+          value="{{it.name}}"
+          data-gi="{{gi}}"
+          data-ii="{{ii}}"
+          bindinput="onItemName"
+          placeholder="食材，如 五花肉"
+          placeholder-class="ph"
+          auto-height
+          maxlength="60"
+          show-confirm-bar="{{false}}"
+          cursor-spacing="40"
+        />
+        <view class="i-del" data-gi="{{gi}}" data-ii="{{ii}}" catchtap="delItem">×</view>
+      </view>
+      <view class="i-bottom">
+        <input
+          wx:if="{{it.unit !== '适量'}}"
+          class="i-qty"
+          value="{{it.qty}}"
+          data-gi="{{gi}}"
+          data-ii="{{ii}}"
+          bindinput="onItemQty"
+          placeholder="用量"
+          placeholder-class="ph"
+          maxlength="10"
+        />
+        <picker
+          class="u-picker"
+          mode="selector"
+          range="{{unitOptions}}"
+          value="{{it.unitIndex}}"
+          data-gi="{{gi}}"
+          data-ii="{{ii}}"
+          bindchange="onItemUnit"
+        >
+          <view class="i-unit {{it.unit === '适量' ? 'only' : ''}}">
+            <text class="u-txt">{{it.unit || 'g'}}</text>
+            <view class="u-caret"></view>
+          </view>
+        </picker>
+        <view class="i-kcal">
+          <text class="ik-num">{{it.previewKcal === null ? '—' : it.previewKcal}}</text>
+          <text class="ik-unit">kcal</text>
+        </view>
+      </view>
+      <view class="i-note" wx:if="{{it.calcNote && it.name}}">{{it.calcNote}}</view>
+    </view>
+
+    <view class="add-line" data-gi="{{gi}}" bindtap="addItem" hover-class="hover-dim">+ 加一条</view>
+  </view>
+
+  <view class="add-group" bindtap="addGroup" hover-class="hover-dim">+ 加一组（腌制、料汁这类）</view>
+
+  <!-- 做法 -->
+  <view class="sec-head">
+    <view class="sec-title">做法</view>
+    <view class="sec-hint">一步一段，做饭时会大字显示</view>
+  </view>
+
+  <view class="step" wx:for="{{recipe.steps}}" wx:key="id" id="step-{{index}}">
+    <view class="s-no">{{index + 1}}</view>
+    <textarea
+      class="s-ipt"
+      value="{{item.text}}"
+      data-si="{{index}}"
+      bindinput="onStep"
+      bindfocus="onStepFocus"
+      bindblur="onStepBlur"
+      placeholder="这一步做什么"
+      placeholder-class="ph"
+      auto-height
+      maxlength="500"
+      show-confirm-bar="{{false}}"
+      cursor-spacing="90"
+    />
+    <view class="s-del" data-si="{{index}}" catchtap="delStep">×</view>
+  </view>
+
+  <view class="add-line wide" bindtap="addStep" hover-class="hover-dim">+ 加一步</view>
+
+  <view class="del-recipe" wx:if="{{!isNew}}" bindtap="deleteRecipe" hover-class="hover-dim">删除这个菜谱</view>
+
+  <view class="bottom-space"></view>
+</view>
+
+<!-- 粘贴导入 -->
+<view class="imp-mask" wx:if="{{imp.show}}" bindtap="closeImport">
+  <view class="imp-sheet" catchtap="noop">
+    <view class="imp-sh-t">粘贴菜谱文字</view>
+    <view class="imp-sh-s">认「用料 / 配料 / 做法」这类小标题，也认一整段流水账。长按输入框就能粘贴剪贴板里的内容。</view>
+    <textarea
+      class="imp-ta"
+      value="{{imp.text}}"
+      bindinput="onImpText"
+      placeholder="把菜谱粘进来…"
+      placeholder-class="ph"
+      maxlength="5000"
+      cursor-spacing="60"
+      show-confirm-bar="{{false}}"
+    />
+    <view class="imp-btns">
+      <view class="imp-btn ghost" bindtap="closeImport">取消</view>
+      <view class="imp-btn solid" bindtap="runImport">拆成菜谱</view>
+    </view>
+  </view>
+</view>
+
+<!-- 底部保存 -->
+<view class="footer">
+  <view class="btn-primary" bindtap="save" hover-class="f-hover">{{isNew ? '记下这道菜' : '存好'}}</view>
+</view>

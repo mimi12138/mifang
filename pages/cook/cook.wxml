@@ -1,0 +1,72 @@
+<view class="cook" style="padding-top:{{statusBar}}px">
+
+  <!-- 顶部工具（往下让开右上角系统胶囊） -->
+  <view class="top" style="padding-top:{{navPad}}px">
+    <view class="close" bindtap="exit" hover-class="hover-dim"></view>
+    <view class="tools">
+      <view class="tool" bindtap="toggleFont" hover-class="hover-dim">字号</view>
+      <view class="tool" bindtap="openMaterials" hover-class="hover-dim">用料</view>
+    </view>
+  </view>
+
+  <!-- 步骤 -->
+  <view
+    class="stage"
+    wx:if="{{!done && steps.length}}"
+    bindtouchstart="onTouchStart"
+    bindtouchend="onTouchEnd"
+  >
+    <view class="pager">
+      <text class="pager-cur">{{index + 1}}</text>
+      <text class="pager-all">/ {{steps.length}}</text>
+    </view>
+    <scroll-view scroll-y class="txt-wrap">
+      <view class="txt-inner">
+        <view class="txt" style="font-size:{{fontSize * 2}}rpx">{{steps[index].text}}</view>
+      </view>
+    </scroll-view>
+    <view class="swipe-tip" wx:if="{{steps.length > 1}}">{{index >= steps.length - 1 ? '已经是最后一步' : '左右滑动切换'}}</view>
+  </view>
+
+  <view class="stage" wx:if="{{!done && !steps.length}}">
+    <view class="txt empty-txt">
+      这道菜没记步骤
+      <view class="hint">下次录入时补上，这里会一步一步大字显示</view>
+    </view>
+  </view>
+
+  <!-- 完成 -->
+  <view class="done" wx:if="{{done}}">
+    <view class="d-title">收 工</view>
+    <view class="d-sub">{{recipe.name}}</view>
+    <view class="d-btn" bindtap="markCooked" hover-class="hover-dim">熟练度 +1</view>
+    <view class="d-back" wx:if="{{steps.length}}" bindtap="backToStep" hover-class="hover-dim">回上一步</view>
+    <view class="d-skip" bindtap="exit">不记了</view>
+  </view>
+
+  <!-- 底部导航 -->
+  <view class="bottom" wx:if="{{!done}}">
+    <view class="navb" wx:if="{{index > 0}}" bindtap="prev" hover-class="hover-dim">上一步</view>
+    <view class="navb main" bindtap="next" hover-class="hover-dim">
+      {{steps.length && index >= steps.length - 1 ? '做完了' : '下一步'}}
+    </view>
+  </view>
+
+  <!-- 用料浮层 -->
+  <view class="mask {{showMaterials ? 'show' : ''}}" bindtap="closeMaterials"></view>
+  <view class="sheet {{showMaterials ? 'up' : ''}}">
+    <view class="sheet-bar"></view>
+    <view class="sheet-title">用料</view>
+    <scroll-view scroll-y class="sheet-body">
+      <view wx:for="{{materials}}" wx:for-item="g" wx:key="id">
+        <view class="g-name" wx:if="{{materials.length > 1}}">{{g.name || '其他'}}</view>
+        <view class="m-row" wx:for="{{g.items}}" wx:for-item="it" wx:key="id">
+          <text class="m-name">{{it.name}}</text>
+          <text class="m-qty">{{it.unitText}}</text>
+        </view>
+      </view>
+      <view class="sheet-empty" wx:if="{{!materials.length}}">没有记用料</view>
+    </scroll-view>
+  </view>
+
+</view>

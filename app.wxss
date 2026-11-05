@@ -1,0 +1,141 @@
+/* 蜜方 · 全局样式与设计 token */
+
+page {
+  /* 色板 */
+  --bg: #F4F3ED;
+  --card: #FFFFFF;
+  --green: #1E3A25;
+  --green-soft: #DDE4D2;
+  --green-mid: #4E7A43;
+  --orange: #C4703A;
+  --t1: #1E2119;
+  --t2: #7E8278;
+  --t3: #A8AB9F;
+  --line: #E7E6DC;
+  --danger: #B3452F;
+
+  /* 热量三档 */
+  --kcal-low: #4E7A43;
+  --kcal-mid: #C4703A;
+  --kcal-high: #B3452F;
+
+  background: var(--bg);
+  color: var(--t1);
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  font-size: 30rpx;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+view, text, input, textarea, scroll-view, button {
+  box-sizing: border-box;
+}
+
+/* 输入组件自带底色/边框，统一抹掉；需要凹槽感的输入框单独用类设背景 */
+input, textarea {
+  background: transparent;
+  border: none;
+}
+
+/* 通用文字 */
+.t1 { color: var(--t1); }
+.t2 { color: var(--t2); }
+.t3 { color: var(--t3); }
+.bold { font-weight: 600; }
+.mono {
+  font-family: "SF Mono", "DIN Alternate", Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* 卡片 */
+.card {
+  background: var(--card);
+  border-radius: 28rpx;
+  overflow: hidden;
+}
+
+/* 胶囊按钮 */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  padding: 0 26rpx;
+  height: 60rpx;
+  line-height: 1;
+}
+
+/* 主按钮 */
+.btn-primary {
+  background: var(--green);
+  color: #F4F3ED;
+  border-radius: 999rpx;
+  height: 92rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+
+.btn-primary:active { opacity: .82; }
+
+/* 次按钮 */
+.btn-ghost {
+  background: var(--card);
+  color: var(--green);
+  border: 1rpx solid var(--line);
+  border-radius: 999rpx;
+  height: 92rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30rpx;
+}
+
+.btn-ghost:active { background: #F0EFE8; }
+
+/* 分类 chip */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 58rpx;
+  padding: 0 24rpx;
+  border-radius: 999rpx;
+  font-size: 26rpx;
+  background: transparent;
+  color: var(--t2);
+  border: 1rpx solid transparent;
+  white-space: nowrap;
+}
+
+.chip.on {
+  background: var(--green-soft);
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* 分割线 */
+.hr {
+  height: 1rpx;
+  background: var(--line);
+}
+
+/* 空状态 */
+.empty {
+  padding: 140rpx 60rpx;
+  text-align: center;
+  color: var(--t3);
+  font-size: 28rpx;
+  line-height: 1.9;
+}
+
+/* 安全区 */
+.safe-bottom {
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}
+
+/* 隐藏滚动条 */
+::-webkit-scrollbar { width: 0; height: 0; }

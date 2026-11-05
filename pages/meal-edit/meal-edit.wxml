@@ -1,0 +1,118 @@
+<view class="page">
+
+  <!-- 名字 -->
+  <view class="block">
+    <input
+      class="ipt-name"
+      value="{{meal.name}}"
+      bindinput="onName"
+      placeholder="这桌叫什么，比如「周六朋友来」"
+      placeholder-class="ph"
+      maxlength="24"
+    />
+  </view>
+
+  <!-- 人数 -->
+  <view class="block row">
+    <view class="lbl">几个人吃</view>
+    <view class="stepper">
+      <view class="st-btn" bindtap="decPeople" hover-class="hover-dim">−</view>
+      <view class="st-num">{{meal.people}}</view>
+      <view class="st-btn" bindtap="incPeople" hover-class="hover-dim">+</view>
+    </view>
+  </view>
+
+  <!-- 备注 -->
+  <view class="block">
+    <input
+      class="ipt-desc"
+      value="{{meal.note}}"
+      bindinput="onNote"
+      placeholder="备注，可不填"
+      placeholder-class="ph"
+      maxlength="60"
+    />
+  </view>
+
+  <!-- 菜品 -->
+  <view class="sec-head">
+    <view class="sec-title">这桌的菜</view>
+    <view class="sec-hint" wx:if="{{meal.items.length}}">{{meal.items.length}} 个</view>
+  </view>
+
+  <view class="dish" wx:for="{{meal.items}}" wx:key="recipeId">
+    <view class="d-top">
+      <view class="d-name">{{item.name}}</view>
+      <view class="d-del" data-i="{{index}}" bindtap="removeItem" hover-class="hover-dim">×</view>
+    </view>
+    <view class="d-bottom">
+      <view class="d-kcal">{{item.perServing}} kcal / 份</view>
+      <view class="stepper small">
+        <view class="st-btn" data-i="{{index}}" bindtap="decServ" hover-class="hover-dim">−</view>
+        <view class="st-num">{{item.servings}}</view>
+        <view class="st-btn" data-i="{{index}}" bindtap="incServ" hover-class="hover-dim">+</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="add-dish" bindtap="openPicker" hover-class="hover-dim">+ 从菜谱里挑</view>
+
+  <!-- 汇总 -->
+  <view class="sum">
+    <view class="sum-row">
+      <text class="sum-lbl">整桌</text>
+      <view class="sum-val">
+        <text class="sv-num">{{total}}</text>
+        <text class="sv-unit">kcal</text>
+      </view>
+    </view>
+    <view class="sum-hr"></view>
+    <view class="sum-row">
+      <text class="sum-lbl">人均 · {{meal.people}} 人</text>
+      <view class="sum-val">
+        <text class="sv-num">{{perPerson}}</text>
+        <text class="sv-unit">kcal</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="del" wx:if="{{!isNew}}" bindtap="deleteMeal" hover-class="hover-dim">拆了这一桌</view>
+
+  <view class="space"></view>
+</view>
+
+<view class="footer">
+  <view class="btn-primary" bindtap="save" hover-class="f-hover">存好</view>
+</view>
+
+<!-- 选菜浮层 -->
+<view class="mask {{pickerShow ? 'show' : ''}}" bindtap="closePicker"></view>
+<view class="sheet {{pickerShow ? 'up' : ''}}">
+  <view class="sheet-bar"></view>
+  <view class="sheet-title">挑菜</view>
+
+  <scroll-view scroll-y class="sheet-body">
+    <view
+      class="pk {{item.checked ? 'on' : ''}}"
+      wx:for="{{pickList}}"
+      wx:key="id"
+      data-i="{{index}}"
+      bindtap="togglePick"
+    >
+      <view class="pk-main">
+        <view class="pk-name">{{item.name}}</view>
+        <view class="pk-meta">{{item.category}} · {{item.perServing}} kcal/份</view>
+      </view>
+      <view class="pk-box {{item.checked ? 'on' : ''}}">
+        <view class="pk-tick" wx:if="{{item.checked}}"></view>
+      </view>
+    </view>
+
+    <view class="pk-empty" wx:if="{{!hasRecipes}}">
+      还没有菜谱
+      <view class="link" bindtap="goCreateRecipe">先记一道</view>
+    </view>
+  </scroll-view>
+
+  <view class="sheet-foot" bindtap="confirmPick" hover-class="hover-dim">好了（{{pickCount}}）</view>
+</view>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秘密食谱 · 真图对照 01 / 04</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #E9E7E2;
+    color: #2C2A28;
+    padding: 44px 32px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header { max-width: 900px; margin: 0 auto 34px; }
+  header h1 { font-size: 21px; font-weight: 600; letter-spacing: .2px; }
+  header p { margin-top: 9px; font-size: 12.5px; line-height: 1.75; color: #837C72; }
+
+  .stage { display: flex; gap: 44px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .col { flex: 0 0 auto; }
+
+  .colhead { margin-bottom: 13px; }
+  .colhead .tag {
+    display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px;
+    color: #fff; background: #2C2A28; padding: 2px 7px; border-radius: 4px; margin-right: 8px;
+    vertical-align: 1.5px;
+  }
+  .colhead b { font-size: 14.5px; font-weight: 600; }
+  .colhead small { display: block; margin-top: 6px; font-size: 11px; color: #968F85; }
+  .swatches { display: flex; gap: 5px; margin-top: 9px; }
+  .swatches i { width: 22px; height: 22px; border-radius: 6px; display: block; border: 1px solid rgba(0,0,0,.08); }
+
+  .phone {
+    width: 375px; height: 700px; zoom: 0.92;
+    border-radius: 34px; border: 1px solid rgba(0,0,0,.07);
+    box-shadow: 0 10px 30px rgba(0,0,0,.09), 0 1px 3px rgba(0,0,0,.05);
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+    background: var(--bg); color: var(--text1);
+  }
+  .statusbar {
+    height: 42px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px; font-size: 12px; font-weight: 600; letter-spacing: .3px;
+  }
+  .dots { display: flex; gap: 4px; align-items: center; }
+  .dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .7; }
+  .dots .batt { width: 18px; height: 8px; border-radius: 2px; border: 1px solid currentColor; opacity: .55; position: relative; }
+  .dots .batt::after { content:""; position:absolute; inset:1.5px; background: currentColor; border-radius:1px; }
+
+  .navbar { height: 44px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .navbar .t { font-size: 16px; font-weight: 600; }
+  .navbar .gear { width: 19px; height: 19px; border-radius: 50%; border: 1.6px solid currentColor; opacity: .34; position: relative; }
+  .navbar .gear::after { content:""; position:absolute; inset:5px; border-radius:50%; background: currentColor; }
+
+  .scroll { flex: 1; overflow: hidden; padding: 0 20px; }
+
+  .hero { padding: 8px 0 18px; }
+  .hero .h1 { font-size: 26px; font-weight: 700; letter-spacing: -.6px; line-height: 1.22; }
+  .hero .h2 { margin-top: 7px; font-size: 12px; color: var(--text2); }
+
+  .tabs { display: flex; gap: 22px; align-items: baseline; margin-bottom: 15px; }
+  .tabs span { font-size: 15px; font-weight: 500; position: relative; padding-bottom: 7px; color: var(--text2); }
+  .tabs span.on { font-weight: 700; color: var(--primary); }
+  .tabs span.on::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2.5px; border-radius:2px; background: var(--primary);
+  }
+
+  .cats { display: flex; gap: 8px; margin-bottom: 18px; }
+  .chip {
+    flex: 0 0 auto; font-size: 12px; padding: 6px 13px; border-radius: 999px; line-height: 1.3;
+    background: var(--card); color: var(--text2); border: 1px solid var(--line);
+  }
+  .chip.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  .card {
+    background: var(--card); border-radius: 20px; margin-bottom: 15px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(40,30,20,.045), 0 7px 20px rgba(40,30,20,.055);
+  }
+  .photo { height: 150px; overflow: hidden; background: #DDD; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pos1 { object-position: 50% 54%; }
+  .pos2 { object-position: 50% 16%; }
+  .p3 { background: linear-gradient(152deg, #9CB46F 0%, #678B4A 55%, #3E6130 100%); }
+
+  .row { display: flex; align-items: center; padding: 13px 16px 15px; gap: 12px; }
+  .left { flex: 1; min-width: 0; }
+  .name { font-size: 17px; font-weight: 600; letter-spacing: -.2px; line-height: 1.3; }
+  .meta { margin-top: 6px; font-size: 11px; color: var(--text2); letter-spacing: .1px; }
+  .kcal { flex: 0 0 auto; text-align: right; }
+  .kcal .n { font-size: 19px; font-weight: 700; letter-spacing: -.5px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .kcal .u { display: block; margin-top: 3px; font-size: 9px; color: var(--text2); letter-spacing: .3px; }
+
+  .k-low  { color: #3E7A52; }
+  .k-mid  { color: #C0703A; }
+  .k-high { color: #B04A33; }
+
+  .fab {
+    position: absolute; right: 22px; bottom: 26px; width: 52px; height: 52px; border-radius: 50%;
+    background: var(--primary); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px rgba(30,30,20,.24);
+  }
+  .fab::before, .fab::after { content:""; position:absolute; background:#fff; border-radius:2px; }
+  .fab::before { width: 18px; height: 2px; }
+  .fab::after { width: 2px; height: 18px; }
+
+  /* 01 素米 · 墨黑 */
+  .theme-1 {
+    --bg: #F8F7F4; --card: #FFFFFF; --primary: #262422;
+    --text1: #262422; --text2: #9B958C; --line: #EBE8E2;
+  }
+  /* 04 墨绿 · 米 · 橙（按参考图方向） */
+  .theme-4 {
+    --bg: #EFEEE8; --card: #FFFFFF; --primary: #1E3A25;
+    --text1: #1C1C19; --text2: #8C8B81; --line: #E4E2D9;
+  }
+  .theme-4 .k-low  { color: #4E7A43; }
+  .theme-4 .k-mid  { color: #D2712F; }
+  .theme-4 .k-high { color: #A8382A; }
+
+  .notes { max-width: 1000px; margin: 42px auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .note { background: #fff; border: 1px solid #E6E2DB; border-radius: 12px; padding: 19px 21px; }
+  .note h3 { font-size: 13px; font-weight: 700; margin-bottom: 9px; }
+  .note p { font-size: 12px; line-height: 1.8; color: #77706A; }
+  .note p + p { margin-top: 8px; }
+  .note b { color: #45403A; }
+  .warn { background: #FFF6EC; border-color: #F0DCC4; max-width: 1000px; margin: 22px auto 0; }
+  .warn h3 { color: #9A5B1F; }
+  .foot { max-width: 1000px; margin: 24px auto 0; font-size: 11.5px; color: #9C958B; line-height: 1.85; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>真图对照 · 01 vs 04</h1>
+  <p>换成你自己的照片了。同一个版式、同样的裁切，只有底色和主色不同。这两张照的色温差别比你想象的大 —— 一张偏白偏亮，一张偏冷偏蓝，正好可以测这两种底子谁更能兼容。</p>
+</header>
+
+<div class="stage">
+
+  <!-- ═══════════ 01 ═══════════ -->
+  <section class="col">
+    <div class="colhead">
+      <span class="tag">01</span><b>素米 · 墨黑</b>
+      <small>底色无色相，交互全黑，彩色只留给热量</small>
+      <div class="swatches">
+        <i style="background:#F8F7F4"></i><i style="background:#262422"></i>
+        <i style="background:#C0703A"></i><i style="background:#9B958C"></i>
+      </div>
+    </div>
+
+    <div class="phone theme-1">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero"><div class="h1">今天做点什么</div><div class="h2">18 道菜 · 3 桌搭配</div></div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats">
+          <span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">面食</span><span class="chip">蒸菜</span>
+        </div>
+
+        <div class="card">
+          <div class="photo"><img class="pos1" src="food-01.jpg" alt=""></div>
+          <div class="row">
+            <div class="left"><div class="name">黑胡椒牛肉意面</div><div class="meta">面食 · 做过 5 次 · 2 人份</div></div>
+            <div class="kcal"><div class="n k-high">520</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo"><img class="pos2" src="food-02.jpg" alt=""></div>
+          <div class="row">
+            <div class="left"><div class="name">荠菜香菇包</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-low">182</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo p3"></div>
+          <div class="row">
+            <div class="left"><div class="name">香菇滑鸡（示意）</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-mid">245</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 04 ═══════════ -->
+  <section class="col">
+    <div class="colhead">
+      <span class="tag">04</span><b>墨绿 · 米 · 橙</b>
+      <small>按你给的参考图方向：深墨绿主色 + 暖米底 + 橙做强调</small>
+      <div class="swatches">
+        <i style="background:#EFEEE8"></i><i style="background:#1E3A25"></i>
+        <i style="background:#D2712F"></i><i style="background:#8C8B81"></i>
+      </div>
+    </div>
+
+    <div class="phone theme-4">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero"><div class="h1">今天做点什么</div><div class="h2">18 道菜 · 3 桌搭配</div></div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats">
+          <span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">面食</span><span class="chip">蒸菜</span>
+        </div>
+
+        <div class="card">
+          <div class="photo"><img class="pos1" src="food-01.jpg" alt=""></div>
+          <div class="row">
+            <div class="left"><div class="name">黑胡椒牛肉意面</div><div class="meta">面食 · 做过 5 次 · 2 人份</div></div>
+            <div class="kcal"><div class="n k-high">520</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo"><img class="pos2" src="food-02.jpg" alt=""></div>
+          <div class="row">
+            <div class="left"><div class="name">荠菜香菇包</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-low">182</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo p3"></div>
+          <div class="row">
+            <div class="left"><div class="name">香菇滑鸡（示意）</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-mid">245</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="notes">
+  <div class="note">
+    <h3>01 · 素米 · 墨黑</h3>
+    <p><b>看第一张意面：</b>白盘子、橙红面条，在米白底上边界很清楚，照片是页面上最亮的一块。</p>
+    <p><b>看第二张包子：</b>这张冷白偏蓝，放在微暖的 #F8F7F4 上会显得更冷 —— 但只是「冷」，不会脏。</p>
+    <p><b>问题：</b>页面整体没有色彩倾向，像工具，不像「我的食谱」。</p>
+  </div>
+  <div class="note">
+    <h3>04 · 墨绿 · 米 · 橙</h3>
+    <p><b>看第一张意面：</b>深绿 chip 和橙色面条形成互补，面看起来更「香」了，这是绿色的隐藏好处。</p>
+    <p><b>看第二张包子：</b>这张本身冷，配上深墨绿的控件反而协调 —— 冷色照片在深绿体系里不显突兀，这是个意外收获。</p>
+    <p><b>问题：</b>橙色的热量数字和橙色面条撞色，数字会被照片抢一点注意力。</p>
+  </div>
+</div>
+
+<div class="note warn">
+  <h3>两个必须现在决定的问题，照片里暴露出来的</h3>
+  <p><b>1. 你的照片上自带黄色文字</b>（「黑胡椒牛肉意面」「新品：荠菜香菇包」+ 勾选图标）。这些字在卡片的菜名旁边会重复一遍，而且黄色在很多底色上都显廉价。我的建议是录入时提供<strong>「框选封面」</strong>——拖动一个取景框自己定裁哪里，默认居中。这个功能不做，你的照片永远切得别扭。</p>
+  <p><b>2. 第二张是拼图</b>（上半馅料+包子、下半锅里）。拼图缩到 150px 高的横条里，什么都看不清。这类照片更适合做<strong>正方形或 4:3 封面</strong>，或者干脆不进列表卡、只在详情页展示。</p>
+  <p>所以图片比例这里要先定：卡片封面用 <b>16:9 横条（现在这样）</b>，还是 <b>4:3（更高，能装下拼图）</b>？这一条会改整个列表页的节奏。</p>
+</div>
+
+<p class="foot">
+  两张照片我按 16:9 横条居中裁切演示，第一张的取景点在 54% 高度（拍到盘子主体），第二张在 16%（避开中间的黄字）。<br>
+  真机上裁切由你自己拖框决定。第三张卡是渐变占位，用来说明三档热量并排时的观感。
+</p>
+
+</body>
+</html>

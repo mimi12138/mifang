@@ -1,0 +1,126 @@
+<view class="page">
+
+  <!-- 顶部 Tab + 设置 -->
+  <view class="head">
+    <view class="tabs">
+      <view class="tab {{tab === 'recipe' ? 'on' : ''}}" data-tab="recipe" bindtap="switchTab">
+        <text>菜谱</text>
+        <text class="cnt" wx:if="{{recipeTotal}}">{{recipeTotal}}</text>
+      </view>
+      <view class="tab {{tab === 'meal' ? 'on' : ''}}" data-tab="meal" bindtap="switchTab">
+        <text>一桌</text>
+        <text class="cnt" wx:if="{{mealTotal}}">{{mealTotal}}</text>
+      </view>
+    </view>
+    <view class="gear" bindtap="goSettings" hover-class="gear-hover">
+      <view class="dot"></view>
+      <view class="dot"></view>
+      <view class="dot"></view>
+    </view>
+  </view>
+
+  <!-- 搜索 -->
+  <view class="search">
+    <view class="ico"></view>
+    <input
+      class="ipt"
+      value="{{keyword}}"
+      bindinput="onSearch"
+      placeholder="搜菜名、用料、标签"
+      placeholder-class="ph"
+      confirm-type="search"
+    />
+    <view class="clear" wx:if="{{keyword}}" bindtap="clearSearch">×</view>
+  </view>
+
+  <!-- 分类栏 -->
+  <scroll-view class="cats" scroll-x enable-flex wx:if="{{tab === 'recipe'}}">
+    <view class="cat-row">
+      <view
+        wx:for="{{categories}}"
+        wx:key="*this"
+        class="chip {{category === item ? 'on' : ''}}"
+        data-c="{{item}}"
+        bindtap="pickCategory"
+      >{{item}}</view>
+    </view>
+  </scroll-view>
+
+  <!-- 菜谱列表 -->
+  <view class="list" wx:if="{{tab === 'recipe'}}">
+    <view
+      class="card"
+      wx:for="{{filtered}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="goDetail"
+      hover-class="card-hover"
+      hover-stay-time="60"
+    >
+      <view class="cover">
+        <image wx:if="{{item.cover}}" class="img" src="{{item.cover}}" mode="aspectFill" lazy-load />
+        <view wx:else class="ph"><text>{{item.first}}</text></view>
+        <view class="warn" wx:if="{{item.unmeasured}}">{{item.unmeasured}} 项未计量</view>
+      </view>
+      <view class="bar">
+        <view class="info">
+          <view class="name">{{item.name}}</view>
+          <view class="meta">
+            <text>{{item.category}}</text>
+            <text wx:if="{{item.cookedCount}}" class="sep">·</text>
+            <text wx:if="{{item.cookedCount}}">做过 {{item.cookedCount}} 次</text>
+          </view>
+        </view>
+        <view class="kcal {{item.level}}">
+          <view class="num">{{item.perServing}}</view>
+          <view class="unit">kcal/份</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{!filtered.length}}">
+      <view wx:if="{{!recipeTotal}}">
+        还没有菜谱。<text class="link" bindtap="createNew">记第一道菜</text>
+      </view>
+      <view wx:else>没找到。换个词，或者把分类切回「全部」。</view>
+    </view>
+  </view>
+
+  <!-- 一桌列表 -->
+  <view class="list" wx:else>
+    <view
+      class="mcard"
+      wx:for="{{meals}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="goMeal"
+      hover-class="card-hover"
+      hover-stay-time="60"
+    >
+      <view class="m-top">
+        <view class="m-name">{{item.name}}</view>
+        <view class="m-people">{{item.people}} 人</view>
+      </view>
+      <view class="m-meta">
+        <text wx:if="{{item.count}}">{{item.count}} 个菜</text>
+        <text wx:else>还没选菜</text>
+      </view>
+      <view class="m-bottom">
+        <view class="m-kcal">
+          <text class="num">{{item.total}}</text>
+          <text class="unit">kcal 整桌</text>
+        </view>
+        <view class="m-per">人均 {{item.perPerson}} kcal</view>
+      </view>
+    </view>
+
+    <view class="empty" wx:if="{{!meals.length}}">
+      还没有搭过一桌。<text class="link" bindtap="createNew">搭一桌</text>
+    </view>
+  </view>
+
+  <view class="fab-wrap">
+    <view class="fab" bindtap="createNew" hover-class="fab-hover">+</view>
+  </view>
+
+</view>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秘密食谱 · 页面风格对照</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #F2F0ED;
+    color: #2C2A28;
+    padding: 44px 32px 72px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header { max-width: 980px; margin: 0 auto 36px; }
+  header h1 { font-size: 22px; font-weight: 600; letter-spacing: .3px; }
+  header p { margin-top: 8px; font-size: 13px; line-height: 1.7; color: #8A8378; max-width: 640px; }
+
+  .stage { display: flex; gap: 30px; justify-content: center; align-items: flex-start; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 12px; }
+  .col { flex: 0 0 auto; }
+  .colhead { margin-bottom: 12px; padding-left: 2px; }
+  .colhead .tag {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 1px;
+    color: #fff; background: #2C2A28; padding: 2px 7px; border-radius: 4px; margin-right: 7px;
+    vertical-align: 1px;
+  }
+  .colhead b { font-size: 15px; font-weight: 600; }
+  .colhead small { display: block; margin-top: 5px; font-size: 11px; color: #9A938A; }
+
+  /* 手机外框 */
+  .phone {
+    width: 375px; height: 700px; zoom: 0.8;
+    border-radius: 34px; border: 1px solid rgba(0,0,0,.07);
+    box-shadow: 0 8px 28px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.05);
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+  }
+  .statusbar {
+    height: 42px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px; font-size: 12px; font-weight: 600; letter-spacing: .3px;
+  }
+  .dots { display: flex; gap: 4px; align-items: center; }
+  .dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .75; }
+  .dots .batt { width: 18px; height: 8px; border-radius: 2px; border: 1px solid currentColor; opacity: .6; position: relative; }
+  .dots .batt::after { content:""; position:absolute; inset:1.5px; background: currentColor; border-radius:1px; }
+
+  .navbar { height: 44px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 18px; }
+  .navbar .t { font-size: 16px; font-weight: 600; }
+  .navbar .gear { width: 20px; height: 20px; border-radius: 50%; border: 1.6px solid currentColor; opacity: .38; position: relative; }
+  .navbar .gear::after { content:""; position:absolute; inset:5px; border-radius:50%; background: currentColor; }
+
+  .scroll { flex: 1; overflow: hidden; padding: 0 18px; }
+
+  .hero { padding: 6px 0 16px; }
+  .hero .h1 { font-size: 25px; font-weight: 700; letter-spacing: -.4px; line-height: 1.25; }
+  .hero .h2 { margin-top: 6px; font-size: 12px; }
+
+  .tabs { display: flex; gap: 20px; align-items: baseline; margin-bottom: 14px; }
+  .tabs span { font-size: 15px; font-weight: 500; position: relative; padding-bottom: 6px; }
+  .tabs span.on { font-weight: 700; }
+
+  .cats { display: flex; gap: 8px; margin-bottom: 16px; overflow: hidden; }
+  .chip { flex: 0 0 auto; font-size: 12px; padding: 5px 12px; border-radius: 999px; line-height: 1.4; }
+
+  .card { margin-bottom: 14px; overflow: hidden; }
+  .photo { position: relative; display: flex; align-items: flex-end; padding: 10px; }
+  .photo::before {
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(120% 90% at 72% 18%, rgba(255,255,255,.34), transparent 62%);
+  }
+  .photo .kcal {
+    position: relative; z-index: 1; font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 999px; background: rgba(0,0,0,.42); color: #fff;
+    backdrop-filter: blur(4px);
+  }
+  .body { padding: 11px 13px 13px; }
+  .name { font-size: 16px; font-weight: 600; letter-spacing: -.2px; }
+  .meta { margin-top: 5px; font-size: 11px; letter-spacing: .1px; }
+
+  .p1 { background: linear-gradient(150deg, #A9623D 0%, #8C4526 52%, #5E2A16 100%); }
+  .p2 { background: linear-gradient(150deg, #E8B345 0%, #D8732F 55%, #B94A22 100%); }
+  .p3 { background: linear-gradient(150deg, #93B06A 0%, #5F8947 55%, #3C6130 100%); }
+
+  /* ───────── A 暖食 ───────── */
+  .theme-a { background: #FAF7F3; color: #2C2A28; }
+  .theme-a .statusbar { color: #2C2A28; }
+  .theme-a .hero .h1 { color: #2C2A28; }
+  .theme-a .hero .h2 { color: #AEA499; }
+  .theme-a .tabs span { color: #B0A69B; }
+  .theme-a .tabs span.on { color: #C0562F; }
+  .theme-a .tabs span.on::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2.5px; border-radius:2px; background:#C0562F;
+  }
+  .theme-a .chip { background: #fff; color: #8C8378; border: 1px solid #EDE5DB; }
+  .theme-a .chip.on { background: #C0562F; color: #fff; border-color: #C0562F; }
+  .theme-a .card { background: #fff; border-radius: 20px; box-shadow: 0 1px 2px rgba(80,50,20,.05), 0 6px 18px rgba(80,50,20,.055); }
+  .theme-a .photo { height: 152px; }
+  .theme-a .name { color: #2C2A28; }
+  .theme-a .meta { color: #AEA499; }
+
+  /* ───────── B 清简 ───────── */
+  .theme-b { background: #FFFFFF; color: #14171A; }
+  .theme-b .statusbar { color: #14171A; }
+  .theme-b .hero { padding: 4px 0 12px; }
+  .theme-b .hero .h1 { font-size: 22px; letter-spacing: -.6px; color: #14171A; }
+  .theme-b .hero .h2 { color: #9BA1A6; }
+  .theme-b .tabs { gap: 18px; margin-bottom: 12px; border-bottom: 1px solid #F0F0F0; }
+  .theme-b .tabs span { font-size: 13.5px; color: #9BA1A6; padding-bottom: 8px; }
+  .theme-b .tabs span.on { color: #1F4A3D; }
+  .theme-b .tabs span.on::after {
+    content:""; position:absolute; left:0; right:0; bottom:-1px; height:1.5px; background:#1F4A3D;
+  }
+  .theme-b .cats { gap: 6px; margin-bottom: 14px; }
+  .theme-b .chip { background: #F6F6F5; color: #7C8288; border-radius: 6px; font-size: 11.5px; padding: 4px 9px; }
+  .theme-b .chip.on { background: #1F4A3D; color: #fff; }
+  .theme-b .card { border: 1px solid #EFEFEF; border-radius: 8px; display: flex; align-items: stretch; }
+  .theme-b .photo { width: 96px; height: 76px; flex: 0 0 auto; padding: 0; }
+  .theme-b .photo .kcal { display: none; }
+  .theme-b .body { padding: 12px 12px 10px; display: flex; flex-direction: column; justify-content: center; }
+  .theme-b .name { font-size: 15px; }
+  .theme-b .meta { color: #9BA1A6; font-size: 11px; }
+
+  /* ───────── C 手账 ───────── */
+  .theme-c {
+    background: #EDE4D3;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(160,130,90,.045) 0 1px, transparent 1px 22px),
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,.34), transparent 55%);
+    color: #4A3D2E;
+  }
+  .theme-c .statusbar { color: #6B5B47; }
+  .theme-c .navbar .t { font-family: Georgia, "Songti SC", "SimSun", serif; letter-spacing: .5px; color: #4A3D2E; }
+  .theme-c .hero .h1 {
+    font-family: Georgia, "Songti SC", "SimSun", serif; font-size: 23px; letter-spacing: .5px; color: #43372A;
+  }
+  .theme-c .hero .h2 { color: #9C8B74; }
+  .theme-c .tabs span { color: #A8977F; font-family: Georgia, "Songti SC", serif; font-size: 14px; }
+  .theme-c .tabs span.on { color: #A8503C; }
+  .theme-c .tabs span.on::after {
+    content:""; position:absolute; left:0; right:0; bottom:2px; height:1px;
+    background: #A8503C; opacity:.7;
+  }
+  .theme-c .chip { background: transparent; color: #8C7B63; border: 1px dashed #C4B49B; font-size: 11.5px; padding: 4px 10px; }
+  .theme-c .chip.on { background: #A8503C; color: #FFF8EC; border-style: solid; border-color: #A8503C; }
+  .theme-c .card {
+    background: #FFFDF7; border-radius: 4px; border: 1px solid #E2D5BE;
+    box-shadow: 2px 3px 0 rgba(150,120,80,.13);
+  }
+  .theme-c .card:nth-of-type(odd) { transform: rotate(-.45deg); }
+  .theme-c .card:nth-of-type(even) { transform: rotate(.4deg); }
+  .theme-c .photo { height: 136px; border-bottom: 1px solid #EFE5D2; }
+  .theme-c .photo .kcal { background: rgba(74,61,46,.55); border-radius: 3px; }
+  .theme-c .name { font-family: Georgia, "Songti SC", "SimSun", serif; font-size: 17px; letter-spacing: .4px; color: #43372A; }
+  .theme-c .meta { color: #9C8B74; font-size: 11px; }
+
+  /* 说明区 */
+  .notes { max-width: 1040px; margin: 40px auto 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .note { background: #fff; border: 1px solid #E8E4DE; border-radius: 12px; padding: 18px 20px; }
+  .note h3 { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .note p { font-size: 12px; line-height: 1.75; color: #7A736A; }
+  .note .verdict { margin-top: 10px; font-size: 12px; color: #C0562F; font-weight: 600; }
+  .note.b .verdict { color: #1F4A3D; }
+  .note.c .verdict { color: #A8503C; }
+  .foot { max-width: 1040px; margin: 26px auto 0; font-size: 11.5px; color: #A29B91; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>页面风格对照</h1>
+  <p>三种方向，都用同一个列表页做对比 —— 同一批内容、同样的信息量，只换视觉语言。挑一个，我把字号梯度、间距、圆角、分类栏形式全部定死，再往下做详情页和录入页。</p>
+</header>
+
+<div class="stage">
+
+  <!-- ══════════ A ══════════ -->
+  <section class="col">
+    <div class="colhead">
+      <span class="tag">A</span><b>暖食</b>
+      <small>暖米底 · 大图 · 大圆角 · 重留白</small>
+    </div>
+    <div class="phone theme-a">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero">
+          <div class="h1">今天做点什么</div>
+          <div class="h2">18 道菜 · 3 桌搭配</div>
+        </div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats">
+          <span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">汤羹</span><span class="chip">面食</span>
+        </div>
+        <div class="card">
+          <div class="photo p1"><span class="kcal">428 kcal / 份</span></div>
+          <div class="body">
+            <div class="name">红烧肉</div>
+            <div class="meta">炖菜 · 做过 6 次 · 4 人份</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="photo p2"><span class="kcal">176 kcal / 份</span></div>
+          <div class="body">
+            <div class="name">番茄炒蛋</div>
+            <div class="meta">炒菜 · 做过 12 次 · 2 人份</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ B ══════════ -->
+  <section class="col">
+    <div class="colhead">
+      <span class="tag">B</span><b>清简</b>
+      <small>纯白底 · 横向卡片 · 信息密度高</small>
+    </div>
+    <div class="phone theme-b">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero">
+          <div class="h1">今天做点什么</div>
+          <div class="h2">18 道菜 · 3 桌搭配</div>
+        </div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats">
+          <span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">汤羹</span><span class="chip">面食</span>
+        </div>
+        <div class="card">
+          <div class="photo p1"></div>
+          <div class="body">
+            <div class="name">红烧肉</div>
+            <div class="meta">炖菜 · 428 kcal/份 · 做过 6 次</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="photo p2"></div>
+          <div class="body">
+            <div class="name">番茄炒蛋</div>
+            <div class="meta">炒菜 · 176 kcal/份 · 做过 12 次</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="photo p3"></div>
+          <div class="body">
+            <div class="name">蒜蓉西兰花</div>
+            <div class="meta">炒菜 · 92 kcal/份 · 做过 8 次</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="photo p1"></div>
+          <div class="body">
+            <div class="name">香菇滑鸡</div>
+            <div class="meta">蒸菜 · 245 kcal/份 · 做过 3 次</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ C ══════════ -->
+  <section class="col">
+    <div class="colhead">
+      <span class="tag">C</span><b>手账</b>
+      <small>纸色底 · 衬线标题 · 纸片质感</small>
+    </div>
+    <div class="phone theme-c">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero">
+          <div class="h1">今天做点什么</div>
+          <div class="h2">18 道菜 · 3 桌搭配</div>
+        </div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats">
+          <span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">汤羹</span>
+        </div>
+        <div class="card">
+          <div class="photo p1"><span class="kcal">428 kcal / 份</span></div>
+          <div class="body">
+            <div class="name">红烧肉</div>
+            <div class="meta">炖菜 · 做过 6 次 · 4 人份</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="photo p2"><span class="kcal">176 kcal / 份</span></div>
+          <div class="body">
+            <div class="name">番茄炒蛋</div>
+            <div class="meta">炒菜 · 做过 12 次 · 2 人份</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="notes">
+  <div class="note a">
+    <h3>A · 暖食</h3>
+    <p>暖米色打底，照片在暖调背景上更显食欲；卡片大圆角、深阴影、大留白，一屏只放得下 1.5 张卡。字大、触控区大，站在灶台前一眼看清。</p>
+    <div class="verdict">代价：一屏信息少，菜多了要划很久</div>
+  </div>
+  <div class="note b">
+    <h3>B · 清简</h3>
+    <p>纯白无阴影，靠 1px 细线分隔；横向卡片图左文右，一屏能看 5–6 个菜。字号收小，整体偏工具感，长期用不腻。</p>
+    <div class="verdict">代价：图变小，食物照片的冲击力没了</div>
+  </div>
+  <div class="note c">
+    <h3>C · 手账</h3>
+    <p>纸色底 + 细横线纹理，衬线标题，卡片带虚线边和轻微倾斜，像贴在本子上的食谱卡。</p>
+    <div class="verdict">代价：斜卡片在真机上易与原生控件打架</div>
+  </div>
+</div>
+
+<p class="foot">
+  说明：这是用 HTML 做的视觉稿，尺寸按 iPhone 375pt 宽模拟，但**不是**小程序实际渲染结果。定稿后我用 WXSS 重写，字体、行高、点击区会按微信原生控件调整一次。<br>
+  图里的照片是渐变色块代替，真机上换成你自己的菜照效果会比这好。
+</p>
+
+</body>
+</html>

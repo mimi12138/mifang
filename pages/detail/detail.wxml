@@ -1,0 +1,88 @@
+<view class="page" wx:if="{{recipe}}">
+
+  <!-- 大图 -->
+  <view class="hero">
+    <image wx:if="{{recipe.cover}}" class="hero-img" src="{{recipe.cover}}" mode="aspectFill" bindtap="previewCover" />
+    <view wx:else class="hero-ph"></view>
+    <view class="hero-mask"></view>
+
+    <view class="nav" style="padding-top:{{statusBar}}px">
+      <view class="nav-row">
+        <view class="nb back" bindtap="goBack"></view>
+        <view class="nb edit" bindtap="goEdit">编辑</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="body">
+
+    <!-- 标题 -->
+    <view class="title">{{recipe.name}}</view>
+    <view class="sub">
+      <text>{{recipe.category}}</text>
+      <text wx:if="{{recipe.desc}}" class="dot">·</text>
+      <text wx:if="{{recipe.desc}}">{{recipe.desc}}</text>
+    </view>
+    <view class="tags" wx:if="{{recipe.tags.length}}">
+      <view class="tag" wx:for="{{recipe.tags}}" wx:key="*this">{{item}}</view>
+    </view>
+
+    <!-- 热量条 -->
+    <view class="kbar">
+      <view class="kb-left">
+        <view class="kb-num-row">
+          <text class="approx">≈</text>
+          <text class="kb-num">{{shownKcal}}</text>
+        </view>
+        <view class="kb-unit">kcal / 份</view>
+      </view>
+      <view class="kb-right">
+        <view class="kb-line">整锅 {{calc.total}} kcal</view>
+        <view class="kb-line">{{recipe.servings}} 份</view>
+        <view class="kb-warn" wx:if="{{calc.unmeasured.length}}">{{calc.unmeasuredText}}，未计入</view>
+      </view>
+    </view>
+
+    <!-- 用料 -->
+    <view class="sec">
+      <view class="sec-head">
+        <view class="sec-title">用料</view>
+        <view class="toggle {{ignoreSeasoning ? 'on' : ''}}" bindtap="toggleSeasoning">
+          {{ignoreSeasoning ? '已忽略调料' : '含调料'}}
+        </view>
+      </view>
+
+      <view class="group" wx:for="{{calc.groups}}" wx:for-item="g" wx:key="id">
+        <view class="g-name" wx:if="{{groupCount > 1}}">{{g.name || '其他'}}</view>
+        <view class="ing" wx:for="{{g.items}}" wx:for-item="it" wx:key="id">
+          <view class="ing-name">{{it.name}}</view>
+          <view class="ing-qty">{{it.calc.compound ? it.calc.summary : it.unitText}}</view>
+          <view class="ing-kcal {{it.calc.measured ? '' : 'dim'}}">
+            <text wx:if="{{it.calc.compound}}" class="ing-approx">≈</text>{{it.calc.measured ? it.calc.kcal : '—'}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 做法 -->
+    <view class="sec" wx:if="{{recipe.steps.length}}">
+      <view class="sec-title">做法</view>
+      <view class="step" wx:for="{{recipe.steps}}" wx:key="id">
+        <view class="s-no">{{index + 1}}</view>
+        <view class="s-text">{{item.text}}</view>
+      </view>
+    </view>
+
+    <view class="cooked" wx:if="{{cookedCount}}">
+      做过 {{cookedCount}} 次<text wx:if="{{lastCookedText}}" class="dot">·</text><text wx:if="{{lastCookedText}}">上次 {{lastCookedText}}</text>
+    </view>
+
+  </view>
+
+  <!-- 底部 -->
+  <view class="footer">
+    <view class="f-btn ghost" bindtap="cookedOne" hover-class="f-hover">熟练度 +1</view>
+    <view class="f-btn solid" bindtap="goCook" hover-class="f-hover">开 火</view>
+  </view>
+
+</view>

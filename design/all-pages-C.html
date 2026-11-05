@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>蜜方 · 全页面总览</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #E7E5DF; color: #2C2A28; padding: 40px 24px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header { max-width: 940px; margin: 0 auto 12px; }
+  header h1 { font-size: 21px; font-weight: 600; letter-spacing: .2px; }
+  header p { margin-top: 9px; font-size: 12px; line-height: 1.8; color: #837C72; max-width: 780px; }
+
+  .palette { max-width: 940px; margin: 22px auto 34px; display: flex; gap: 9px; flex-wrap: wrap; }
+  .palette div { flex: 1; min-width: 96px; border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,.07); background: #fff; }
+  .palette .sw { height: 38px; }
+  .palette .lb { padding: 6px 8px 7px; font-size: 9px; line-height: 1.5; color: #8A837A; }
+  .palette .lb b { display: block; font-size: 9.5px; color: #3C3730; font-weight: 600; }
+
+  .grid { display: flex; flex-wrap: wrap; gap: 38px 30px; justify-content: center; max-width: 940px; margin: 0 auto; }
+  .col { flex: 0 0 auto; }
+  .colhead { margin-bottom: 10px; height: 46px; }
+  .colhead .tag {
+    display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .8px;
+    color: #fff; background: #1E3A25; padding: 2px 6px; border-radius: 4px; margin-right: 6px; vertical-align: 1.5px;
+  }
+  .colhead b { font-size: 13px; font-weight: 600; }
+  .colhead small { display: block; margin-top: 5px; font-size: 10px; color: #968F85; line-height: 1.4; }
+
+  .phone {
+    width: 375px; height: 700px; zoom: 0.72; border-radius: 34px; border: 1px solid rgba(0,0,0,.07);
+    box-shadow: 0 10px 28px rgba(0,0,0,.09); overflow: hidden; position: relative;
+    display: flex; flex-direction: column; background: #F4F3ED; color: #1C1C19;
+  }
+  .phone.dark { background: #1E3A25; color: #F1EFE4; border-color: rgba(0,0,0,.14); }
+
+  .statusbar { height: 40px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 11.5px; font-weight: 600; }
+  .dots { display: flex; gap: 4px; align-items: center; }
+  .dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .7; }
+  .dots .batt { width: 17px; height: 8px; border-radius: 2px; border: 1px solid currentColor; opacity: .55; position: relative; }
+  .dots .batt::after { content:""; position:absolute; inset:1.5px; background: currentColor; border-radius:1px; }
+
+  .navbar { height: 42px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 15px; font-weight: 600; }
+  .navbar .brand { font-size: 16px; font-weight: 700; letter-spacing: 3px; color: #1E3A25; }
+  .navbar .gear { width: 18px; height: 18px; border-radius: 50%; border: 1.6px solid currentColor; opacity: .32; position: relative; }
+  .navbar .gear::after { content:""; position:absolute; inset:4.5px; border-radius:50%; background: currentColor; }
+  .navbar .act { font-size: 13px; font-weight: 500; color: #1E3A25; }
+  .navbar .act.mute { color: #8C8B81; }
+  .navbar .ttl { font-size: 14.5px; font-weight: 600; }
+
+  .scroll { flex: 1; overflow: hidden; padding: 0 20px; }
+  .hero { padding: 8px 0 16px; }
+  .hero .h1 { font-size: 25px; font-weight: 700; letter-spacing: -.6px; line-height: 1.2; }
+  .hero .h2 { margin-top: 6px; font-size: 11.5px; color: #8C8B81; }
+
+  .tabs { display: flex; gap: 22px; align-items: baseline; margin-bottom: 13px; }
+  .tabs span { font-size: 14.5px; font-weight: 500; position: relative; padding-bottom: 7px; color: #8C8B81; }
+  .tabs span.on { font-weight: 700; color: #1E3A25; }
+  .tabs span.on::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2.5px; border-radius:2px; background: #1E3A25; }
+
+  .cats { display: flex; gap: 7px; margin-bottom: 16px; }
+  .chip { flex: 0 0 auto; font-size: 11.5px; padding: 6px 12px; border-radius: 999px; line-height: 1.3; background: #fff; color: #7C8576; border: 1px solid #E1E2D6; }
+  .chip.on { background: #DDE4D2; color: #1E3A25; border-color: #DDE4D2; font-weight: 600; }
+
+  .card { background: #fff; border-radius: 20px; margin-bottom: 14px; overflow: hidden; box-shadow: 0 1px 2px rgba(40,30,20,.045), 0 7px 20px rgba(40,30,20,.06); }
+  .photo { height: 148px; overflow: hidden; background: #DDD; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .pos1 { object-position: 50% 54%; }
+  .pos2 { object-position: 50% 16%; }
+  .row { display: flex; align-items: center; padding: 12px 15px 14px; gap: 11px; }
+  .left { flex: 1; min-width: 0; }
+  .name { font-size: 16.5px; font-weight: 600; letter-spacing: -.2px; line-height: 1.3; color: #1C1C19; }
+  .meta { margin-top: 5px; font-size: 10.5px; color: #8C8B81; }
+  .kcal { flex: 0 0 auto; text-align: right; }
+  .kcal .n { font-size: 18.5px; font-weight: 700; letter-spacing: -.5px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .kcal .u { display: block; margin-top: 3px; font-size: 8.5px; color: #8C8B81; }
+  .k-low { color: #4E7A43; } .k-mid { color: #D2712F; } .k-high { color: #A8382A; }
+
+  .fab { position: absolute; right: 20px; bottom: 24px; width: 50px; height: 50px; border-radius: 50%; background: #1E3A25; box-shadow: 0 6px 16px rgba(30,40,25,.26); }
+  .fab::before, .fab::after { content:""; position:absolute; background:#fff; border-radius:2px; top:50%; left:50%; transform: translate(-50%,-50%); }
+  .fab::before { width: 17px; height: 2px; }
+  .fab::after { width: 2px; height: 17px; }
+
+  /* ── 详情页 ── */
+  .heroimg { height: 186px; margin: 0 -20px; overflow: hidden; position: relative; }
+  .heroimg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; }
+  .heroimg .back { position: absolute; top: 13px; left: 18px; width: 31px; height: 31px; border-radius: 50%; background: rgba(255,255,255,.9); }
+  .heroimg .back::before { content:""; position:absolute; width:8px; height:8px; border-left:2px solid #1E3A25; border-bottom:2px solid #1E3A25; transform: rotate(45deg); top:11px; left:12px; }
+  .heroimg .edit {
+    position: absolute; top: 13px; right: 18px; height: 31px; padding: 0 14px; border-radius: 16px;
+    background: rgba(255,255,255,.9); font-size: 12px; font-weight: 600; color: #1E3A25;
+    display: flex; align-items: center; letter-spacing: .5px;
+  }
+
+  .dtitle { padding: 14px 0 12px; }
+  .dtitle h2 { font-size: 20.5px; font-weight: 700; letter-spacing: -.4px; }
+  .dtitle .sm { margin-top: 6px; font-size: 10.5px; color: #8C8B81; }
+
+  .kcalbox { background: #DDE4D2; border-radius: 16px; padding: 13px 15px; display: flex; align-items: center; gap: 13px; margin-bottom: 15px; }
+  .kcalbox .big { font-size: 23px; font-weight: 700; letter-spacing: -.7px; color: #1E3A25; line-height: 1; }
+  .kcalbox .lbl { font-size: 9px; color: #5E6E56; margin-top: 5px; }
+  .kcalbox .divider { width: 1px; align-self: stretch; background: rgba(30,58,37,.16); }
+  .kcalbox .warn { margin-left: auto; font-size: 9px; color: #6C7A63; text-align: right; line-height: 1.5; }
+
+  .sect { margin-bottom: 15px; }
+  .sect > .st { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+  .sect > .st h3 { font-size: 13.5px; font-weight: 700; }
+  .sect > .st span { font-size: 9.5px; color: #A0A196; }
+  .grp { margin-bottom: 9px; }
+  .grp .gt { font-size: 10px; font-weight: 600; color: #6C7A63; letter-spacing: .4px; margin-bottom: 4px; }
+  .ing { display: flex; align-items: center; padding: 6px 0; border-bottom: 1px solid #F0EFE7; font-size: 12.5px; }
+  .ing:last-child { border-bottom: none; }
+  .ing .n { flex: 1; color: #2A2A26; }
+  .ing .q { color: #1E3A25; font-weight: 600; }
+  .ing .q.dim { color: #A8A99E; font-weight: 400; }
+  .ing .c { width: 48px; text-align: right; font-size: 10.5px; color: #A8A99E; }
+
+  .bottom { flex: 0 0 auto; display: flex; gap: 9px; padding: 11px 20px 19px; background: linear-gradient(to top, #F4F3ED 68%, rgba(244,243,237,0)); }
+  .btn { height: 44px; border-radius: 13px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+  .btn.ghost { background: #fff; color: #1E3A25; border: 1px solid #E1E2D6; flex: 0 0 106px; font-size: 13px; }
+  .btn.solid { background: #1E3A25; color: #fff; flex: 1; font-size: 14.5px; letter-spacing: 2px; }
+
+  /* ── 编辑页 ── */
+  .field { margin-bottom: 15px; }
+  .field > label { display: block; font-size: 10.5px; font-weight: 600; color: #6C7A63; letter-spacing: .3px; margin-bottom: 7px; }
+  .input { background: #fff; border: 1px solid #E6E5DA; border-radius: 11px; padding: 11px 13px; font-size: 13.5px; color: #1C1C19; }
+  .cover { height: 104px; border-radius: 14px; overflow: hidden; position: relative; margin-bottom: 8px; }
+  .cover img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 52%; display: block; }
+  .cover .edit { position: absolute; right: 9px; bottom: 9px; background: rgba(255,255,255,.92); border-radius: 8px; padding: 4px 9px; font-size: 10px; color: #1E3A25; font-weight: 600; }
+  .ingrow { display: flex; align-items: center; gap: 7px; margin-bottom: 7px; }
+  .ingrow .a { flex: 1; background: #fff; border: 1px solid #E6E5DA; border-radius: 9px; padding: 9px 11px; font-size: 12.5px; min-width: 0; }
+  .ingrow .a.s { flex: 0 0 56px; text-align: center; color: #B5B6AB; }
+  .ingrow .a.u { flex: 0 0 52px; text-align: center; color: #6C7A63; }
+  .ingrow .x { flex: 0 0 auto; width: 15px; height: 15px; opacity: .28; position: relative; }
+  .ingrow .x::before, .ingrow .x::after { content:""; position:absolute; background:#2A2A26; height:1.5px; width:15px; top:6.5px; border-radius:1px; }
+  .ingrow .x::before { transform: rotate(45deg); } .ingrow .x::after { transform: rotate(-45deg); }
+  .addrow { font-size: 11.5px; color: #6C7A63; padding: 4px 0 2px; display: flex; gap: 14px; }
+  .addrow b { color: #1E3A25; font-weight: 600; }
+  .grphd { display: flex; align-items: center; justify-content: space-between; margin: 12px 0 7px; }
+  .grphd .t { font-size: 11px; font-weight: 700; color: #1E3A25; }
+  .grphd .r { font-size: 10px; color: #A8A99E; }
+  .peoplerow { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 13px; padding: 12px 15px; margin-bottom: 15px; font-size: 13px; }
+  .stepper { display: flex; align-items: center; gap: 13px; font-size: 14px; font-weight: 600; color: #1E3A25; }
+  .stepper i { width: 22px; height: 22px; border-radius: 7px; background: #F1F1E9; display: block; position: relative; }
+  .stepper i::before { content:""; position:absolute; left:6px; top:10px; width:10px; height:2px; background:#1E3A25; border-radius:1px; }
+  .stepper i.plus::after { content:""; position:absolute; left:10px; top:6px; height:10px; width:2px; background:#1E3A25; border-radius:1px; }
+  .delrow { text-align: center; font-size: 12.5px; color: #A8382A; padding: 18px 0 6px; }
+
+  /* ── 一桌 ── */
+  .mealcard { background: #fff; border-radius: 18px; padding: 15px 16px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(40,30,20,.045), 0 6px 16px rgba(40,30,20,.05); }
+  .mealcard .t { font-size: 16px; font-weight: 700; letter-spacing: -.2px; }
+  .mealcard .m { margin-top: 6px; font-size: 10.5px; color: #8C8B81; }
+  .mealcard .tagline { display: flex; gap: 6px; margin-top: 10px; }
+  .mini { font-size: 9.5px; padding: 3px 8px; border-radius: 999px; background: #F1F1E9; color: #6C7A63; }
+  .mini.g { background: #DDE4D2; color: #1E3A25; font-weight: 600; }
+
+  .dish { display: flex; align-items: center; gap: 11px; background: #fff; border-radius: 14px; padding: 11px 13px; margin-bottom: 9px; }
+  .dish .th { width: 44px; height: 44px; border-radius: 9px; overflow: hidden; flex: 0 0 auto; background: #DDD; }
+  .dish .th img { width: 100%; height: 100%; object-fit: cover; }
+  .dish .th.g3 { background: linear-gradient(150deg,#9CB46F,#3E6130); }
+  .dish .inf { flex: 1; min-width: 0; }
+  .dish .nm { font-size: 13.5px; font-weight: 600; }
+  .dish .sb { font-size: 10px; color: #8C8B81; margin-top: 4px; }
+  .dish .ec { text-align: right; font-size: 12.5px; font-weight: 600; color: #1E3A25; font-variant-numeric: tabular-nums; }
+  .dish .ec small { display: block; font-size: 9px; color: #A8A99E; font-weight: 400; margin-top: 3px; }
+  .dish .x { flex: 0 0 auto; width: 15px; height: 15px; opacity: .22; position: relative; margin-left: 2px; }
+  .dish .x::before, .dish .x::after { content:""; position:absolute; background:#2A2A26; height:1.4px; width:15px; top:6.5px; }
+  .dish .x::before { transform: rotate(45deg); } .dish .x::after { transform: rotate(-45deg); }
+
+  .sum { background: #DDE4D2; border-radius: 16px; padding: 15px 16px; margin: 6px 0 16px; }
+  .sum .l { font-size: 10px; color: #5E6E56; letter-spacing: .3px; }
+  .sum .v { font-size: 22px; font-weight: 700; color: #1E3A25; letter-spacing: -.6px; margin-top: 4px; line-height: 1; }
+  .sum .v small { font-size: 11px; font-weight: 500; letter-spacing: 0; margin-left: 3px; }
+  .sumrow { display: flex; gap: 26px; }
+
+  /* ── 设置 ── */
+  .setgrp { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 13px; }
+  .setgrp .gh { padding: 11px 15px 7px; font-size: 10px; font-weight: 700; color: #6C7A63; letter-spacing: .6px; }
+  .setrow { display: flex; align-items: center; padding: 11px 15px; border-top: 1px solid #F2F1E9; font-size: 13px; }
+  .setgrp .gh + .setrow { border-top: none; }
+  .setrow .n { flex: 1; }
+  .setrow .v { font-size: 11.5px; color: #A8A99E; }
+  .setrow .radio { width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid #D5D6C8; flex: 0 0 auto; margin-left: 10px; }
+  .setrow .radio.on { border-color: #1E3A25; border-width: 5px; }
+  .bar { height: 5px; border-radius: 3px; background: #EDECE2; overflow: hidden; margin: 9px 0 7px; }
+  .bar i { display: block; height: 100%; width: 23%; background: #DDE4D2; border-radius: 3px; }
+  .barwrap { padding: 4px 15px 14px; }
+  .barwrap .t { display: flex; justify-content: space-between; font-size: 10.5px; color: #8C8B81; }
+  .barwrap .t b { color: #1E3A25; font-weight: 600; }
+  .danger { color: #A8382A; }
+
+  /* ── 做饭模式 ── */
+  .cm-top { flex: 0 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 50px; }
+  .cm-exit { width: 31px; height: 31px; border-radius: 50%; background: rgba(241,239,228,.1); position: relative; }
+  .cm-exit::before, .cm-exit::after { content:""; position:absolute; background:#F1EFE4; height:1.6px; width:13px; top:15px; left:9px; border-radius:1px; }
+  .cm-exit::before { transform: rotate(45deg); } .cm-exit::after { transform: rotate(-45deg); }
+  .cm-count { font-size: 11.5px; letter-spacing: 1px; color: #8FA091; font-variant-numeric: tabular-nums; }
+  .cm-count b { color: #F1EFE4; font-size: 14px; font-weight: 700; }
+  .cm-tools { display: flex; gap: 7px; align-items: center; }
+  .cm-aa { font-size: 11px; font-weight: 600; color: #9FAF9D; border: 1px solid rgba(241,239,228,.22); padding: 5px 9px; border-radius: 999px; }
+  .cm-mat { font-size: 11.5px; color: #DDE4D2; border: 1px solid rgba(221,228,210,.34); padding: 5px 11px; border-radius: 999px; }
+  .cm-progress { flex: 0 0 auto; height: 2px; background: rgba(241,239,228,.12); margin: 0 20px 20px; border-radius: 2px; overflow: hidden; }
+  .cm-progress i { display: block; height: 100%; background: #DDE4D2; }
+  .cm-body { flex: 1; padding: 0 26px; display: flex; flex-direction: column; justify-content: center; }
+  .cm-step-no { font-size: 10.5px; letter-spacing: 3px; color: #7E907F; margin-bottom: 15px; }
+  .cm-text { font-size: 24px; line-height: 1.72; font-weight: 500; letter-spacing: -.2px; color: #F6F4E9; }
+  .cm-text em { font-style: normal; color: #DDE4D2; font-weight: 700; }
+  .cm-hint { margin-top: 20px; font-size: 11px; color: #7E907F; line-height: 1.7; }
+  .cm-dots { display: flex; gap: 5px; justify-content: center; padding-bottom: 13px; }
+  .cm-dots i { width: 5px; height: 5px; border-radius: 50%; background: rgba(241,239,228,.24); display: block; }
+  .cm-dots i.on { background: #DDE4D2; width: 16px; border-radius: 3px; }
+  .cm-bottom { flex: 0 0 auto; display: flex; gap: 10px; padding: 0 22px 24px; }
+  .cm-btn { height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+  .cm-btn.prev { flex: 0 0 108px; background: rgba(241,239,228,.09); color: #A9B8A8; }
+  .cm-btn.next { flex: 1; background: #DDE4D2; color: #1E3A25; }
+
+  .sheet-mask { position: absolute; inset: 0; background: rgba(10,25,15,.42); }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0; background: #F6F5EC; border-radius: 22px 22px 0 0;
+    padding: 10px 22px 24px; max-height: 74%; overflow: hidden; color: #1C1C19; box-shadow: 0 -8px 30px rgba(0,0,0,.2);
+  }
+  .sheet .handle { width: 34px; height: 4px; border-radius: 2px; background: #D8D7C9; margin: 0 auto 13px; }
+  .sheet h4 { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+  .sheet .sub { font-size: 10.5px; color: #8C8B81; margin-bottom: 12px; }
+  .sheet .gt { font-size: 10px; font-weight: 700; color: #6C7A63; letter-spacing: .5px; margin: 11px 0 4px; }
+  .sheet .ing { display: flex; align-items: center; padding: 6px 0; border-bottom: 1px solid #ECEBE0; font-size: 12.5px; }
+  .sheet .ing:last-child { border-bottom: none; }
+  .sheet .ing .n { flex: 1; }
+  .sheet .ing .q { color: #1E3A25; font-weight: 600; }
+  .sheet .ing .q.dim { color: #A8A99E; font-weight: 400; }
+
+  .done { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 34px; text-align: center; }
+  .done .ring { width: 94px; height: 94px; border-radius: 50%; background: rgba(221,228,210,.1); border: 1.5px solid rgba(221,228,210,.3); display: flex; align-items: center; justify-content: center; margin-bottom: 26px; }
+  .done .ring::before { content:""; width: 26px; height: 13px; border-left: 3px solid #DDE4D2; border-bottom: 3px solid #DDE4D2; transform: rotate(-45deg) translate(2px,-3px); }
+  .done h2 { font-size: 24px; font-weight: 700; letter-spacing: -.4px; color: #F6F4E9; }
+  .done p { margin-top: 11px; font-size: 12px; color: #8FA091; line-height: 1.75; }
+  .done .act { margin-top: 32px; width: 100%; display: flex; flex-direction: column; gap: 10px; }
+  .done .b1 { height: 48px; border-radius: 14px; background: #DDE4D2; color: #1E3A25; display: flex; align-items: center; justify-content: center; font-size: 14.5px; font-weight: 700; }
+  .done .b2 { height: 44px; border-radius: 14px; color: #A9B8A8; display: flex; align-items: center; justify-content: center; font-size: 12.5px; }
+
+  /* ── 说明 ── */
+  .note { max-width: 940px; margin: 44px auto 0; background: #fff; border: 1px solid #E4E0D9; border-radius: 12px; padding: 20px 22px; }
+  .note h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+  .note p { font-size: 12px; line-height: 1.85; color: #77706A; }
+  .note p + p { margin-top: 8px; }
+  .note b { color: #45403A; }
+  .note ul { margin: 8px 0 0 18px; }
+  .note li { font-size: 12px; line-height: 1.9; color: #77706A; }
+  .note li b { color: #45403A; }
+  .cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .foot { max-width: 940px; margin: 20px auto 0; font-size: 11px; color: #9C958B; line-height: 1.85; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>蜜方 · 全页面总览</h1>
+  <p>九个屏，按实际使用顺序排：找菜 → 看菜谱 → 开火照做 → 记一笔 → 录入新菜 → 搭一桌 → 管空间。做饭模式已并入本文件，配色、字号、间距都与其他页面统一。</p>
+</header>
+
+<div class="palette">
+  <div><div class="sw" style="background:#DDE4D2"></div><div class="lb"><b>#DDE4D2</b>浅豆绿 · 面</div></div>
+  <div><div class="sw" style="background:#1E3A25"></div><div class="lb"><b>#1E3A25</b>深墨绿 · 字/控件</div></div>
+  <div><div class="sw" style="background:#F4F3ED"></div><div class="lb"><b>#F4F3ED</b>暖米 · 底</div></div>
+  <div><div class="sw" style="background:#D2712F"></div><div class="lb"><b>#D2712F</b>橙 · 中热量</div></div>
+  <div><div class="sw" style="background:#4E7A43"></div><div class="lb"><b>#4E7A43</b>低热量</div></div>
+  <div><div class="sw" style="background:#A8382A"></div><div class="lb"><b>#A8382A</b>高热量</div></div>
+</div>
+
+<div class="grid">
+
+  <!-- 01 列表 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">01</span><b>菜谱列表</b><small>首页标题「蜜方」，浅绿只在选中的分类上</small></div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="brand">蜜方</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero"><div class="h1">今天做点什么</div><div class="h2">18 道菜 · 3 桌搭配</div></div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats"><span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">面食</span></div>
+        <div class="card">
+          <div class="photo"><img class="pos1" src="food-01.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">黑胡椒牛肉意面</div><div class="meta">面食 · 做过 5 次 · 2 人份</div></div>
+            <div class="kcal"><div class="n k-high">480</div><span class="u">kcal / 份</span></div></div>
+        </div>
+        <div class="card">
+          <div class="photo"><img class="pos2" src="food-02.jpg" alt=""></div>
+          <div class="row"><div class="left"><div class="name">荠菜香菇包</div><div class="meta">蒸菜 · 做过 3 次 · 3 人份</div></div>
+            <div class="kcal"><div class="n k-low">182</div><span class="u">kcal / 份</span></div></div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+  <!-- 02 详情 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">02</span><b>菜谱详情</b><small>编辑浮在右上，主按钮「开火」</small></div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="scroll" style="padding-top:0;">
+        <div class="heroimg"><img src="food-01.jpg" alt=""><div class="back"></div><div class="edit">编辑</div></div>
+        <div class="dtitle"><h2>黑胡椒牛肉意面</h2><div class="sm">面食 · 做过 5 次 · 2 人份 · 3 天前</div></div>
+
+        <div class="kcalbox">
+          <div><div class="big">480</div><div class="lbl">kcal / 份</div></div>
+          <div class="divider"></div>
+          <div><div class="big" style="font-size:18px;">≈960</div><div class="lbl">整锅 2 人份</div></div>
+          <div class="warn">3 项未计量<br>未计入</div>
+        </div>
+
+        <div class="sect">
+          <div class="st"><h3>用料</h3><span>共 12 项</span></div>
+          <div class="grp"><div class="gt">配料</div>
+            <div class="ing"><span class="n">青红椒</span><span class="q dim">适量</span><span class="c">—</span></div>
+            <div class="ing"><span class="n">洋葱</span><span class="q dim">适量</span><span class="c">—</span></div>
+            <div class="ing"><span class="n">牛肉</span><span class="q">200 g</span><span class="c">310</span></div>
+          </div>
+          <div class="grp"><div class="gt">料汁（一人份）</div>
+            <div class="ing"><span class="n">生抽</span><span class="q">2 勺</span><span class="c">19</span></div>
+            <div class="ing"><span class="n">老抽</span><span class="q">半勺</span><span class="c">6</span></div>
+            <div class="ing"><span class="n">蚝油</span><span class="q">八分勺</span><span class="c">9</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="btn ghost">熟练度 +1</div>
+        <div class="btn solid">开 火</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 做饭模式 步骤 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">03</span><b>做饭模式 · 步骤</b><small>深底翻屏，一步一屏，24px 大字无图</small></div>
+    <div class="phone dark">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="cm-top">
+        <div class="cm-exit"></div>
+        <div class="cm-count"><b>2</b> / 5</div>
+        <div class="cm-tools"><div class="cm-aa">字号</div><div class="cm-mat">用料</div></div>
+      </div>
+      <div class="cm-progress"><i style="width:40%"></i></div>
+      <div class="cm-body">
+        <div class="cm-step-no">STEP 2</div>
+        <div class="cm-text">意面下锅煮 <em>8 分钟</em>，捞出沥干，留半碗煮面水。</div>
+        <div class="cm-hint">水开后再下，加一勺盐。</div>
+      </div>
+      <div class="cm-dots"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+      <div class="cm-bottom">
+        <div class="cm-btn prev">上一步</div>
+        <div class="cm-btn next">下一步</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 用料浮层 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">04</span><b>做饭模式 · 用料浮层</b><small>随时拉出来查比例，不退出模式</small></div>
+    <div class="phone dark">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="cm-top">
+        <div class="cm-exit"></div>
+        <div class="cm-count"><b>5</b> / 5</div>
+        <div class="cm-tools"><div class="cm-aa">字号</div><div class="cm-mat">用料</div></div>
+      </div>
+      <div class="cm-progress"><i style="width:100%"></i></div>
+      <div class="cm-body">
+        <div class="cm-step-no">STEP 5</div>
+        <div class="cm-text">下意面，淋料汁，大火收到浓稠，出锅。</div>
+      </div>
+      <div class="sheet-mask"></div>
+      <div class="sheet">
+        <div class="handle"></div>
+        <h4>全部用料</h4>
+        <div class="sub">黑胡椒牛肉意面 · 2 人份</div>
+        <div class="gt">配料</div>
+        <div class="ing"><span class="n">青红椒</span><span class="q dim">适量</span></div>
+        <div class="ing"><span class="n">洋葱</span><span class="q dim">适量</span></div>
+        <div class="ing"><span class="n">牛肉</span><span class="q">200 g</span></div>
+        <div class="gt">料汁（一人份）</div>
+        <div class="ing"><span class="n">生抽</span><span class="q">2 勺</span></div>
+        <div class="ing"><span class="n">老抽</span><span class="q">半勺</span></div>
+        <div class="ing"><span class="n">蚝油</span><span class="q">八分勺</span></div>
+        <div class="ing"><span class="n">糖</span><span class="q">半勺</span></div>
+        <div class="ing"><span class="n">黑胡椒粉</span><span class="q">1 勺</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 完成 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">05</span><b>做完 · 收尾</b><small>顺手把「熟练度 +1」记掉</small></div>
+    <div class="phone dark">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="cm-top"><div class="cm-exit"></div><div style="width:31px;"></div><div style="width:56px;"></div></div>
+      <div class="done">
+        <div class="ring"></div>
+        <h2>这下可以吃了</h2>
+        <p>5 个步骤走完了<br>锅还在灶上，别忘了关火</p>
+        <div class="act">
+          <div class="b1">熟练度 +1</div>
+          <div class="b2">回到菜谱</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 编辑 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">06</span><b>录入 / 编辑</b><small>用量可整列留空，单位自由输入</small></div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="act mute">取消</div><div class="ttl">编辑菜谱</div><div class="act">保存</div></div>
+      <div class="scroll">
+        <div class="cover"><img src="food-01.jpg" alt=""><div class="edit">更换</div></div>
+
+        <div class="field" style="margin-top:13px;">
+          <label>菜名</label>
+          <div class="input">黑胡椒牛肉意面</div>
+        </div>
+
+        <div class="field">
+          <label>分类</label>
+          <div class="cats" style="margin-bottom:0;">
+            <span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip on">面食</span><span class="chip">汤羹</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>用料</label>
+          <div class="grphd"><span class="t">配料</span><span class="r">4 项</span></div>
+          <div class="ingrow"><div class="a">青红椒</div><div class="a s">—</div><div class="a u">适量</div><div class="x"></div></div>
+          <div class="ingrow"><div class="a">洋葱</div><div class="a s">—</div><div class="a u">适量</div><div class="x"></div></div>
+          <div class="ingrow"><div class="a">牛肉</div><div class="a s">200</div><div class="a u">g</div><div class="x"></div></div>
+          <div class="addrow"><b>+ 加一条</b></div>
+
+          <div class="grphd"><span class="t">料汁（一人份）</span><span class="r">6 项</span></div>
+          <div class="ingrow"><div class="a">生抽</div><div class="a s">2</div><div class="a u">勺</div><div class="x"></div></div>
+          <div class="ingrow"><div class="a">蚝油</div><div class="a s">0.8</div><div class="a u">勺</div><div class="x"></div></div>
+          <div class="addrow"><b>+ 加一条</b>　<span><b>+ 加分组</b></span></div>
+        </div>
+      </div>
+      <div class="delrow" style="padding-bottom:0;">删除这个菜谱</div>
+    </div>
+  </section>
+
+  <!-- 07 一桌列表 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">07</span><b>一桌 · 列表</b><small>搭配方案，不记日期餐次</small></div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="brand">蜜方</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero"><div class="h1">搭一桌</div><div class="h2">3 桌方案 · 按创建时间排</div></div>
+        <div class="tabs"><span>菜谱</span><span class="on">一桌</span></div>
+
+        <div class="mealcard">
+          <div class="t">周六朋友来</div>
+          <div class="m">6 个菜 · 4 个人 · 10 月 12 日</div>
+          <div class="tagline"><span class="mini g">人均 562 kcal</span><span class="mini">总计 2248</span><span class="mini">荤 4 · 素 2</span></div>
+        </div>
+        <div class="mealcard">
+          <div class="t">快手工作日晚餐</div>
+          <div class="m">3 个菜 · 2 个人 · 10 月 8 日</div>
+          <div class="tagline"><span class="mini g">人均 480 kcal</span><span class="mini">总计 960</span><span class="mini">荤 1 · 素 2</span></div>
+        </div>
+        <div class="mealcard">
+          <div class="t">减脂周的晚饭</div>
+          <div class="m">4 个菜 · 1 个人 · 9 月 26 日</div>
+          <div class="tagline"><span class="mini g">人均 386 kcal</span><span class="mini">总计 386</span><span class="mini">荤 1 · 素 3</span></div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+  <!-- 08 一桌详情 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">08</span><b>一桌 · 详情</b><small>浅绿汇总块，看这桌重不重</small></div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="act mute">返回</div><div class="ttl">周六朋友来</div><div class="act">编辑</div></div>
+      <div class="scroll">
+        <div class="hero" style="padding-bottom:10px;"><div class="h1" style="font-size:22px;">周六朋友来</div><div class="h2">6 个菜 · 10 月 12 日创建</div></div>
+
+        <div class="peoplerow">
+          <span>几个人吃</span>
+          <div class="stepper"><i></i><span>4</span><i class="plus"></i></div>
+        </div>
+
+        <div class="dish">
+          <div class="th"><img src="food-01.jpg" alt=""></div>
+          <div class="inf"><div class="nm">黑胡椒牛肉意面</div><div class="sb">面食 · 2 份</div></div>
+          <div class="ec">960<small>kcal</small></div>
+          <div class="x"></div>
+        </div>
+        <div class="dish">
+          <div class="th"><img src="food-02.jpg" alt=""></div>
+          <div class="inf"><div class="nm">荠菜香菇包</div><div class="sb">蒸菜 · 3 份</div></div>
+          <div class="ec">546<small>kcal</small></div>
+          <div class="x"></div>
+        </div>
+        <div class="dish">
+          <div class="th g3"></div>
+          <div class="inf"><div class="nm">蒜蓉西兰花</div><div class="sb">炒菜 · 1 份</div></div>
+          <div class="ec">184<small>kcal</small></div>
+          <div class="x"></div>
+        </div>
+        <div class="addrow" style="margin-bottom:12px;"><b>+ 再加一个菜</b></div>
+
+        <div class="sum">
+          <div class="sumrow">
+            <div><div class="l">这桌总量</div><div class="v">2248<small>kcal</small></div></div>
+            <div><div class="l">人均</div><div class="v">562<small>kcal</small></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 设置 -->
+  <section class="col">
+    <div class="colhead"><span class="tag">09</span><b>设置 / 存储</b><small>浅绿做进度条，空间看得见</small></div>
+    <div class="phone">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="act mute">返回</div><div class="ttl">设置</div><div style="width:28px;"></div></div>
+      <div class="scroll">
+        <div class="setgrp">
+          <div class="gh">图片画质</div>
+          <div class="setrow"><span class="n">省空间 <span style="color:#A8A99E">800 · 约 60KB</span></span><span class="radio"></span></div>
+          <div class="setrow"><span class="n">标准 <span style="color:#A8A99E">1080 · 约 180KB</span></span><span class="radio on"></span></div>
+          <div class="setrow"><span class="n">高清 <span style="color:#A8A99E">1440 · 约 350KB</span></span><span class="radio"></span></div>
+        </div>
+
+        <div class="setgrp">
+          <div class="gh">存储</div>
+          <div class="barwrap">
+            <div class="t"><span>已用 <b>46 MB</b> / 200 MB</span><span>还能存约 850 张</span></div>
+            <div class="bar"><i></i></div>
+            <div class="t" style="margin-top:4px;"><span>18 道菜 · 236 张图</span><span>数据 124 KB</span></div>
+          </div>
+          <div class="setrow"><span class="n">清理未使用的图片</span><span class="v">12 张 · 2.1 MB</span></div>
+          <div class="setrow"><span class="n">按占用排序</span><span class="v">›</span></div>
+        </div>
+
+        <div class="setgrp">
+          <div class="gh">备份</div>
+          <div class="setrow"><span class="n">导出到文件传输助手</span><span class="v">›</span></div>
+          <div class="setrow"><span class="n">从备份恢复</span><span class="v">›</span></div>
+          <div class="setrow"><span class="n">上次自动备份</span><span class="v">今天 14:20</span></div>
+        </div>
+
+        <div class="setgrp">
+          <div class="gh">危险操作</div>
+          <div class="setrow"><span class="n danger">清空所有数据</span><span class="v">›</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="note" style="margin-top:52px;">
+  <h3>完整流程串起来是这样</h3>
+  <div class="cols2">
+    <div>
+      <p><b>看菜</b><br>打开就是列表，顶部标题「蜜方」，下面一句「今天做点什么」。卡片上菜名、分类、做过几次、每份热量，一屏两张。</p>
+      <p><b>看菜谱</b><br>点进详情：大图、热量条（浅绿）、用料分三组、步骤。右上角「编辑」，底部两个按钮 —— 左「熟练度 +1」，右「开火」。</p>
+      <p><b>开火做菜</b><br>整屏翻成深墨绿，24px 大字，一步一屏。底部「上一步 / 下一步」，右上「字号 / 用料」。手上有油也能操作。</p>
+    </div>
+    <div>
+      <p><b>做完</b><br>最后一屏是「这下可以吃了」，下面接一个大按钮「熟练度 +1」。错过这一刻，你也不会专门回来补记。</p>
+      <p><b>录入</b><br>封面、菜名、分类、份数、用料（可分组、可留空）、步骤。底部一行红字「删除这个菜谱」。</p>
+      <p><b>搭一桌</b><br>选几个菜、定份数、填人数，底部浅绿块直接告诉你这桌总量和人均。</p>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <h3>已确认的设计决定（本稿全部按此执行）</h3>
+  <ul>
+    <li><b>色板：</b>浅豆绿 <code>#DDE4D2</code> / 深墨绿 <code>#1E3A25</code> / 暖米 <code>#F4F3ED</code> / 橙 <code>#D2712F</code>，热量三档另算（绿 <code>#4E7A43</code>、橙 <code>#D2712F</code>、红 <code>#A8382A</code>）。</li>
+    <li><b>浅绿的使用范围：</b>列表页只在选中分类上；详情页做热量条；一桌详情做汇总块；设置页做存储条。其余是暖米和纯白。</li>
+    <li><b>首页标题「蜜方」</b>，hero 保留「今天做点什么」，两个位置各说一件事。</li>
+    <li><b>封面 16:9 横条</b>，不做 4:3。</li>
+    <li><b>主按钮「开火」</b>进做饭模式；<b>「熟练度 +1」</b>作次按钮记一次烹饪。</li>
+    <li><b>编辑入口</b>浮在详情页大图右上，删除收进编辑页底部。</li>
+    <li><b>用量可整列留空</b>，单位自由输入（「八分勺」这种也得能写），用料可分组。</li>
+    <li><b>一桌不设菜品上限</b>，不记日期餐次，只有总量和人均。</li>
+    <li><b>步骤不配图</b>；做饭模式：屏幕常亮、字号可调、不做计时器。</li>
+  </ul>
+</div>
+
+<div class="note">
+  <h3>还差三件事才能开工</h3>
+  <ul>
+    <li><b>食材营养库。</b>我预置约 150 条常见食材（每 100g 热量 + 别名）。你常做菜的食材清单能大幅提高命中率。</li>
+    <li><b>勺重初始表。</b>盐、糖、生抽、老抽、蚝油、醋、料酒、油这八样先填行业常见密度，你称过实物后改。</li>
+    <li><b>项目结构。</b>原生小程序，所有读写收在一个 <code>store.js</code> 里，将来要搬云端只改这一个文件。</li>
+  </ul>
+</div>
+
+<p class="foot">
+  九个屏统一 375pt 宽、缩放 72%。真机字号会按 rpx 换算再校一次。<br>
+  第三张菜（蒜蓉西兰花）用渐变占位，因为目前只有两张真图。<br>
+  做饭模式原来是独立文件 <code>cook-mode.html</code>，内容已全部并入本文件，那份可以删了。
+</p>
+
+</body>
+</html>

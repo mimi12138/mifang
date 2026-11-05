@@ -1,0 +1,606 @@
+.page {
+  padding: 28rpx 32rpx 0;
+  background: var(--bg);
+}
+
+.hover-dim { opacity: .6; }
+
+/* ── 封面 ── */
+.cover {
+  position: relative;
+  width: 100%;
+  height: 386rpx;
+  border-radius: 28rpx;
+  overflow: hidden;
+  background: #EDECE4;
+}
+
+.cover-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.cover-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--t3);
+  border: 2rpx dashed #D6D5C9;
+  border-radius: 28rpx;
+}
+
+.ce-plus {
+  font-size: 56rpx;
+  font-weight: 300;
+  line-height: 1;
+  margin-bottom: 14rpx;
+}
+
+.ce-text {
+  font-size: 25rpx;
+  letter-spacing: 2rpx;
+}
+
+.cover-tag {
+  position: absolute;
+  right: 20rpx;
+  bottom: 20rpx;
+  background: rgba(30, 58, 37, .72);
+  color: #F4F3ED;
+  font-size: 22rpx;
+  padding: 8rpx 22rpx;
+  border-radius: 999rpx;
+}
+
+/* ── 卡片块 ── */
+.block {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 24rpx 28rpx;
+  margin-top: 22rpx;
+}
+
+.block.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lbl {
+  font-size: 24rpx;
+  color: var(--t2);
+  margin-bottom: 14rpx;
+  letter-spacing: 1rpx;
+}
+
+.block.row .lbl {
+  margin-bottom: 0;
+}
+
+.ipt-name {
+  font-size: 38rpx;
+  font-weight: 600;
+  color: var(--t1);
+  height: 72rpx;
+  line-height: 72rpx;
+}
+
+.ipt-desc {
+  font-size: 28rpx;
+  color: var(--t2);
+  height: 60rpx;
+  line-height: 60rpx;
+  margin-top: 6rpx;
+}
+
+.ph { color: var(--t3); font-weight: 400; }
+
+/* ── 分类 ── */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -8rpx;
+}
+
+.chips .chip {
+  margin: 8rpx;
+  border: 1rpx solid var(--line);
+  background: #FAF9F4;
+}
+
+.chips .chip.on {
+  background: var(--green);
+  color: #F4F3ED;
+  border-color: var(--green);
+}
+
+/* ── 份数 ── */
+.stepper {
+  display: flex;
+  align-items: center;
+}
+
+.st-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #F2F1EA;
+  color: var(--t1);
+  font-size: 36rpx;
+  line-height: 62rpx;
+  text-align: center;
+}
+
+.st-num {
+  min-width: 76rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 标签 ── */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: -8rpx;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  background: #F2F1EA;
+  border-radius: 999rpx;
+  padding: 8rpx 8rpx 8rpx 22rpx;
+  font-size: 24rpx;
+  color: var(--t1);
+  margin: 8rpx;
+}
+
+.tag-x {
+  margin-left: 10rpx;
+  width: 36rpx;
+  height: 36rpx;
+  line-height: 34rpx;
+  text-align: center;
+  color: var(--t3);
+  font-size: 28rpx;
+}
+
+.tag-ipt {
+  width: 160rpx;
+  height: 56rpx;
+  font-size: 24rpx;
+  margin: 8rpx;
+  padding: 0 16rpx;
+  color: var(--t1);
+}
+
+/* ── 区块标题 ── */
+.sec-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 46rpx 4rpx 16rpx;
+}
+
+.sec-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--t1);
+  letter-spacing: 1rpx;
+}
+
+.sec-hint {
+  font-size: 21rpx;
+  color: var(--t3);
+}
+
+/* ── 用料组 ── */
+.group {
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 20rpx 28rpx 8rpx;
+  margin-bottom: 20rpx;
+}
+
+.g-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12rpx;
+}
+
+.g-name {
+  flex: 1;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--green);
+  height: 56rpx;
+  line-height: 56rpx;
+}
+
+/* 组名右侧的操作区：上移 / 下移 / 删除 */
+.g-acts {
+  display: flex;
+  align-items: center;
+  margin-left: 8rpx;
+  margin-right: -12rpx;
+}
+
+.g-mv {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--t2);
+}
+
+/* 已经在最上 / 最下：留位置但点不动，免得按钮忽隐忽现 */
+.g-mv.off { color: var(--line); }
+
+.g-mv-hover { background: rgba(0, 0, 0, .05); }
+
+/* 纯 CSS 箭头，不用图片 */
+.arw {
+  width: 15rpx;
+  height: 15rpx;
+  border-left: 3rpx solid currentColor;
+  border-top: 3rpx solid currentColor;
+}
+
+.arw.up {
+  transform: rotate(45deg) translate(2rpx, 2rpx);
+}
+
+.arw.down {
+  transform: rotate(225deg) translate(2rpx, 2rpx);
+}
+
+.g-del {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--t3);
+}
+
+.g-del.hover-dim { background: rgba(0, 0, 0, .05); opacity: 1; }
+
+/* 纯 CSS 垃圾桶图标，不用图片资源 */
+.trash {
+  position: relative;
+  width: 22rpx;
+  height: 24rpx;
+  border: 2rpx solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 6rpx 6rpx;
+}
+
+.trash::before {
+  content: '';
+  position: absolute;
+  left: -8rpx;
+  right: -8rpx;
+  top: -7rpx;
+  height: 2rpx;
+  background: currentColor;
+}
+
+.trash::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -15rpx;
+  margin-left: -6rpx;
+  width: 12rpx;
+  height: 8rpx;
+  border: 2rpx solid currentColor;
+  border-bottom: 0;
+  border-radius: 4rpx 4rpx 0 0;
+}
+
+.item {
+  padding: 18rpx 0;
+  border-top: 1rpx solid var(--line);
+}
+
+.item.first { border-top: 0; }
+
+/* 不用 flex：原生 textarea 在 flex + width:0 下量不出宽度，
+   新插入时会按错误宽度算高度，先撑成一大块白框再慢慢收回 */
+.i-top {
+  position: relative;
+}
+
+/* 食材名改成可换行的多行输入：长句（如整句腌料）也能看全 */
+.i-name {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 60rpx;
+  max-height: 260rpx;
+  font-size: 30rpx;
+  line-height: 52rpx;
+  color: var(--t1);
+  padding: 4rpx 60rpx 4rpx 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  overflow: visible;
+}
+
+.i-del {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 56rpx;
+  height: 56rpx;
+  line-height: 52rpx;
+  text-align: center;
+  color: var(--t3);
+  font-size: 34rpx;
+  margin-top: 2rpx;
+}
+
+.i-bottom {
+  display: flex;
+  align-items: center;
+  margin-top: 6rpx;
+}
+
+.i-qty {
+  width: 150rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  background: #F7F6F0;
+  border-radius: 12rpx;
+  padding: 0 18rpx;
+  font-size: 28rpx;
+  color: var(--t1);
+  font-variant-numeric: tabular-nums;
+}
+
+.u-picker { flex: none; }
+
+/* 单位改成下拉：固定宽度 + 右侧小箭头 */
+.i-unit {
+  width: 180rpx;
+  height: 64rpx;
+  background: #F7F6F0;
+  border-radius: 12rpx;
+  padding: 0 14rpx 0 18rpx;
+  font-size: 28rpx;
+  color: var(--t1);
+  margin-left: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* 选了「适量」，前面的用量框收起，下拉靠左 */
+.i-unit.only { margin-left: 0; }
+
+.u-txt {
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.u-caret {
+  flex: none;
+  width: 0;
+  height: 0;
+  border-left: 7rpx solid transparent;
+  border-right: 7rpx solid transparent;
+  border-top: 7rpx solid var(--t3);
+  margin-left: 8rpx;
+}
+
+.i-kcal {
+  flex: 1;
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+}
+
+.ik-num {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--t2);
+  font-family: "SF Mono", "DIN Alternate", Menlo, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.ik-unit {
+  font-size: 20rpx;
+  color: var(--t3);
+  margin-left: 6rpx;
+}
+
+.i-note {
+  font-size: 21rpx;
+  color: var(--orange);
+  margin-top: 8rpx;
+  padding-left: 2rpx;
+}
+
+/* ── 添加行 ── */
+.add-line {
+  padding: 24rpx 0;
+  font-size: 26rpx;
+  color: var(--green);
+  text-align: center;
+}
+
+.add-line.wide {
+  background: var(--card);
+  border-radius: 24rpx;
+  margin-top: 4rpx;
+}
+
+.add-group {
+  padding: 20rpx;
+  font-size: 26rpx;
+  color: var(--t2);
+  text-align: center;
+  border: 2rpx dashed #DDDCD1;
+  border-radius: 24rpx;
+}
+
+/* ── 步骤 ── */
+.step {
+  display: flex;
+  align-items: flex-start;
+  background: var(--card);
+  border-radius: 24rpx;
+  padding: 24rpx 24rpx 24rpx 28rpx;
+  margin-bottom: 16rpx;
+}
+
+.s-no {
+  flex: none;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 24rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+  margin-top: 8rpx;
+}
+
+.s-ipt {
+  flex: 1;
+  font-size: 30rpx;
+  line-height: 1.6;
+  color: var(--t1);
+  min-height: 60rpx;
+  width: auto;
+}
+
+.s-del {
+  flex: none;
+  width: 56rpx;
+  text-align: center;
+  color: var(--t3);
+  font-size: 34rpx;
+  line-height: 48rpx;
+}
+
+/* ── 删除 ── */
+.del-recipe {
+  margin: 56rpx 0 0;
+  padding: 30rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: var(--danger);
+}
+
+/* 末尾留白要比底部按钮高，最后一步才有地方被"抬"到键盘上方 */
+.bottom-space {
+  height: 320rpx;
+}
+
+/* ── 底部 ── */
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 18rpx 32rpx calc(18rpx + env(safe-area-inset-bottom));
+  background: linear-gradient(to top, var(--bg) 68%, rgba(244, 243, 237, 0));
+  z-index: 30;
+}
+
+.f-hover { opacity: .85; }
+
+/* ── 从文字导入 ── */
+.imp-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 24rpx;
+  padding: 24rpx 28rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  border-radius: 20rpx;
+}
+
+.imp-txt { flex: 1; }
+.imp-t1 { font-size: 28rpx; color: var(--t1); }
+.imp-t2 { font-size: 22rpx; color: var(--t3); margin-top: 4rpx; }
+.imp-go { font-size: 26rpx; color: var(--green); padding-left: 20rpx; }
+
+.imp-mask {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(20, 22, 18, .42);
+  z-index: 90;
+  display: flex;
+  align-items: flex-end;
+}
+
+.imp-sheet {
+  width: 100%;
+  background: var(--card);
+  border-radius: 28rpx 28rpx 0 0;
+  padding: 32rpx 32rpx calc(32rpx + env(safe-area-inset-bottom));
+}
+
+.imp-sh-t { font-size: 32rpx; font-weight: 600; color: var(--t1); }
+.imp-sh-s {
+  font-size: 23rpx;
+  color: var(--t3);
+  margin-top: 8rpx;
+  line-height: 1.55;
+}
+
+.imp-ta {
+  width: 100%;
+  height: 380rpx;
+  margin-top: 24rpx;
+  background: #F7F6F0;
+  border-radius: 16rpx;
+  padding: 22rpx;
+  font-size: 27rpx;
+  line-height: 1.6;
+  color: var(--t1);
+  box-sizing: border-box;
+}
+
+.imp-btns {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 26rpx;
+}
+
+.imp-btn {
+  flex: 1;
+  height: 88rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 29rpx;
+}
+
+.imp-btn.ghost { background: #F1F0E8; color: var(--t2); }
+.imp-btn.solid { background: var(--green); color: #FFFFFF; }

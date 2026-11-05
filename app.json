@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "pages/list/list",
+    "pages/detail/detail",
+    "pages/edit/edit",
+    "pages/cook/cook",
+    "pages/meal-edit/meal-edit",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "backgroundColor": "#F4F3ED",
+    "navigationBarBackgroundColor": "#F4F3ED",
+    "navigationBarTitleText": "蜜方",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "sitemapLocation": "sitemap.json"
+}

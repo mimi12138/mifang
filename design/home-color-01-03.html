@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>秘密食谱 · 色系对照 01 / 03</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #EFEDE9;
+    color: #2C2A28;
+    padding: 44px 32px 64px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header { max-width: 860px; margin: 0 auto 34px; }
+  header h1 { font-size: 21px; font-weight: 600; letter-spacing: .2px; }
+  header p { margin-top: 9px; font-size: 12.5px; line-height: 1.75; color: #8A8378; }
+
+  .stage { display: flex; gap: 44px; justify-content: center; align-items: flex-start; flex-wrap: wrap; }
+  .col { flex: 0 0 auto; }
+
+  .colhead { margin-bottom: 13px; }
+  .colhead .tag {
+    display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: 1.2px;
+    color: #fff; background: #2C2A28; padding: 2px 7px; border-radius: 4px; margin-right: 8px;
+    vertical-align: 1.5px;
+  }
+  .colhead b { font-size: 14.5px; font-weight: 600; }
+  .colhead small { display: block; margin-top: 6px; font-size: 11px; color: #9A938A; }
+  .swatches { display: flex; gap: 5px; margin-top: 9px; }
+  .swatches i {
+    width: 22px; height: 22px; border-radius: 6px; display: block;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+
+  /* ─── 手机外框 ─── */
+  .phone {
+    width: 375px; height: 700px; zoom: 0.92;
+    border-radius: 34px; border: 1px solid rgba(0,0,0,.07);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08), 0 1px 3px rgba(0,0,0,.05);
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+    background: var(--bg); color: var(--text1);
+  }
+  .statusbar {
+    height: 42px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px; font-size: 12px; font-weight: 600; letter-spacing: .3px;
+  }
+  .dots { display: flex; gap: 4px; align-items: center; }
+  .dots i { display: block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: .7; }
+  .dots .batt { width: 18px; height: 8px; border-radius: 2px; border: 1px solid currentColor; opacity: .55; position: relative; }
+  .dots .batt::after { content:""; position:absolute; inset:1.5px; background: currentColor; border-radius:1px; }
+
+  .navbar { height: 44px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+  .navbar .t { font-size: 16px; font-weight: 600; }
+  .navbar .gear { width: 19px; height: 19px; border-radius: 50%; border: 1.6px solid currentColor; opacity: .34; position: relative; }
+  .navbar .gear::after { content:""; position:absolute; inset:5px; border-radius:50%; background: currentColor; }
+
+  .scroll { flex: 1; overflow: hidden; padding: 0 20px; }
+
+  .hero { padding: 8px 0 18px; }
+  .hero .h1 { font-size: 26px; font-weight: 700; letter-spacing: -.6px; line-height: 1.22; }
+  .hero .h2 { margin-top: 7px; font-size: 12px; color: var(--text2); }
+
+  .tabs { display: flex; gap: 22px; align-items: baseline; margin-bottom: 15px; }
+  .tabs span { font-size: 15px; font-weight: 500; position: relative; padding-bottom: 7px; color: var(--text2); }
+  .tabs span.on { font-weight: 700; color: var(--primary); }
+  .tabs span.on::after {
+    content:""; position:absolute; left:0; right:0; bottom:0; height:2.5px; border-radius:2px; background: var(--primary);
+  }
+
+  .cats { display: flex; gap: 8px; margin-bottom: 18px; }
+  .chip {
+    flex: 0 0 auto; font-size: 12px; padding: 6px 13px; border-radius: 999px; line-height: 1.3;
+    background: var(--card); color: var(--text2); border: 1px solid var(--line);
+  }
+  .chip.on { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+  /* ─── 卡片 ─── */
+  .card {
+    background: var(--card); border-radius: 20px; margin-bottom: 15px; overflow: hidden;
+    box-shadow: 0 1px 2px rgba(40,30,20,.045), 0 7px 20px rgba(40,30,20,.055);
+  }
+  .photo { height: 150px; position: relative; }
+  .photo::before {
+    content:""; position:absolute; inset:0;
+    background: radial-gradient(115% 85% at 74% 16%, rgba(255,255,255,.30), transparent 60%);
+  }
+  .p1 { background: linear-gradient(152deg, #A9623D 0%, #8A4325 50%, #57250F 100%); }
+  .p2 { background: linear-gradient(152deg, #E9B84B 0%, #D9752F 54%, #B44A20 100%); }
+  .p3 { background: linear-gradient(152deg, #9CB46F 0%, #678B4A 55%, #3E6130 100%); }
+
+  .row { display: flex; align-items: center; padding: 13px 16px 15px; gap: 12px; }
+  .left { flex: 1; min-width: 0; }
+  .name { font-size: 17px; font-weight: 600; letter-spacing: -.2px; line-height: 1.3; }
+  .meta { margin-top: 6px; font-size: 11px; color: var(--text2); letter-spacing: .1px; }
+  .kcal { flex: 0 0 auto; text-align: right; }
+  .kcal .n { font-size: 19px; font-weight: 700; letter-spacing: -.5px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .kcal .u { display: block; margin-top: 3px; font-size: 9px; color: var(--text2); letter-spacing: .3px; }
+
+  /* 热量三档语义色（全局统一，不随主题变） */
+  .k-low  { color: #3E7A52; }
+  .k-mid  { color: #C0703A; }
+  .k-high { color: #B04A33; }
+
+  /* 悬浮按钮 —— 展示主色 */
+  .fab {
+    position: absolute; right: 22px; bottom: 26px; width: 52px; height: 52px; border-radius: 50%;
+    background: var(--primary); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 6px 16px rgba(40,30,20,.22);
+  }
+  .fab::before, .fab::after { content:""; position:absolute; background:#fff; border-radius:2px; }
+  .fab::before { width: 18px; height: 2px; }
+  .fab::after { width: 2px; height: 18px; }
+
+  /* ─── 色系 01 素米 · 墨黑 ─── */
+  .theme-1 {
+    --bg: #F8F7F4;
+    --card: #FFFFFF;
+    --primary: #262422;
+    --accent: #C0703A;
+    --text1: #262422;
+    --text2: #9B958C;
+    --line: #EBE8E2;
+  }
+  /* ─── 色系 03 米白 · 墨绿 ─── */
+  .theme-3 {
+    --bg: #F7F6F1;
+    --card: #FFFFFF;
+    --primary: #2F5D50;
+    --accent: #C0562F;
+    --text1: #2A2C2A;
+    --text2: #96988F;
+    --line: #E7E7DF;
+  }
+
+  /* ─── 说明 ─── */
+  .notes { max-width: 1000px; margin: 42px auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .note { background: #fff; border: 1px solid #E6E2DB; border-radius: 12px; padding: 19px 21px; }
+  .note h3 { font-size: 13px; font-weight: 700; margin-bottom: 9px; }
+  .note p { font-size: 12px; line-height: 1.8; color: #7A736A; }
+  .note p + p { margin-top: 7px; }
+  .note b { color: #4A443C; }
+  .legend { display: flex; gap: 18px; margin-top: 12px; font-size: 11.5px; }
+  .legend span { display: flex; align-items: center; gap: 5px; }
+  .legend i { width: 9px; height: 9px; border-radius: 50%; display: block; }
+  .foot { max-width: 1000px; margin: 24px auto 0; font-size: 11.5px; color: #A29B91; line-height: 1.85; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>色系对照 · 版式 A</h1>
+  <p>同一个版式，只换颜色。热量已按你的选择改成三档上色并移到卡片右侧。两张图里除了主色，其余完全相同 —— 判断标准就一条：哪一张的菜照更跳出来，且你愿意天天看。</p>
+</header>
+
+<div class="stage">
+
+  <!-- ═══════════ 色系 01 ═══════════ -->
+  <section class="col">
+    <div class="colhead">
+      <span class="tag">01</span><b>素米 · 墨黑</b>
+      <small>底色几乎无色相，主色是墨黑，唯一彩色给热量</small>
+      <div class="swatches">
+        <i style="background:#F8F7F4"></i>
+        <i style="background:#262422"></i>
+        <i style="background:#C0703A"></i>
+        <i style="background:#9B958C"></i>
+      </div>
+    </div>
+
+    <div class="phone theme-1">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero">
+          <div class="h1">今天做点什么</div>
+          <div class="h2">18 道菜 · 3 桌搭配</div>
+        </div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats">
+          <span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">汤羹</span><span class="chip">面食</span>
+        </div>
+
+        <div class="card">
+          <div class="photo p1"></div>
+          <div class="row">
+            <div class="left">
+              <div class="name">红烧肉</div>
+              <div class="meta">炖菜 · 做过 6 次 · 4 人份</div>
+            </div>
+            <div class="kcal"><div class="n k-high">428</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo p2"></div>
+          <div class="row">
+            <div class="left">
+              <div class="name">番茄炒蛋</div>
+              <div class="meta">炒菜 · 做过 12 次 · 2 人份</div>
+            </div>
+            <div class="kcal"><div class="n k-low">176</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo p3"></div>
+          <div class="row">
+            <div class="left">
+              <div class="name">香菇滑鸡</div>
+              <div class="meta">蒸菜 · 做过 3 次 · 3 人份</div>
+            </div>
+            <div class="kcal"><div class="n k-mid">245</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ 色系 03 ═══════════ -->
+  <section class="col">
+    <div class="colhead">
+      <span class="tag">03</span><b>米白 · 墨绿</b>
+      <small>绿与食物橙红互补，交互元素全部走墨绿</small>
+      <div class="swatches">
+        <i style="background:#F7F6F1"></i>
+        <i style="background:#2F5D50"></i>
+        <i style="background:#C0562F"></i>
+        <i style="background:#96988F"></i>
+      </div>
+    </div>
+
+    <div class="phone theme-3">
+      <div class="statusbar"><span>9:41</span><span class="dots"><i></i><i></i><i></i><span class="batt"></span></span></div>
+      <div class="navbar"><div class="t">我的食谱</div><div class="gear"></div></div>
+      <div class="scroll">
+        <div class="hero">
+          <div class="h1">今天做点什么</div>
+          <div class="h2">18 道菜 · 3 桌搭配</div>
+        </div>
+        <div class="tabs"><span class="on">菜谱</span><span>一桌</span></div>
+        <div class="cats">
+          <span class="chip on">全部</span><span class="chip">炒菜</span><span class="chip">炖菜</span><span class="chip">汤羹</span><span class="chip">面食</span>
+        </div>
+
+        <div class="card">
+          <div class="photo p1"></div>
+          <div class="row">
+            <div class="left">
+              <div class="name">红烧肉</div>
+              <div class="meta">炖菜 · 做过 6 次 · 4 人份</div>
+            </div>
+            <div class="kcal"><div class="n k-high">428</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo p2"></div>
+          <div class="row">
+            <div class="left">
+              <div class="name">番茄炒蛋</div>
+              <div class="meta">炒菜 · 做过 12 次 · 2 人份</div>
+            </div>
+            <div class="kcal"><div class="n k-low">176</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="photo p3"></div>
+          <div class="row">
+            <div class="left">
+              <div class="name">香菇滑鸡</div>
+              <div class="meta">蒸菜 · 做过 3 次 · 3 人份</div>
+            </div>
+            <div class="kcal"><div class="n k-mid">245</div><span class="u">kcal / 份</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="fab"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="notes">
+  <div class="note">
+    <h3>01 · 素米 · 墨黑</h3>
+    <p><b>逻辑：</b>把彩色全部让给照片。底色只带 1% 暖，主色用墨黑 —— 按钮、Tab、选中的分类全是黑的，等于「没有颜色」。整个页面唯一的高饱和是热量数字。</p>
+    <p><b>看的时候注意：</b>三张菜照在这个底色上是不是最扎眼的那一层？如果是，说明底子没抢戏，做对了。</p>
+    <p><b>风险：</b>黑 + 白 + 米灰的组合没有「品牌记忆点」，看久了会觉得像系统工具，不是「我的食谱本」。</p>
+  </div>
+  <div class="note">
+    <h3>03 · 米白 · 墨绿</h3>
+    <p><b>逻辑：</b>墨绿是橙红的补色，菜照放在绿调界面里，饱和度会显得更高。交互元素（选中态、悬浮按钮）全部走绿，页面有明确的「这是我做的 App」的辨识度。</p>
+    <p><b>看的时候注意：</b>那个绿色悬浮按钮和红色的热量数字，会不会打架？绿色本身会不会让你觉得这 App 在「劝你吃草」？</p>
+    <p><b>风险：</b>绿 + 红的组合在某些光线下容易显得廉价（像超市生鲜区的促销牌）。</p>
+  </div>
+</div>
+
+<div class="notes" style="grid-template-columns:1fr; margin-top:22px;">
+  <div class="note">
+    <h3>热量三档配色（两版共用，语义色不随主题变）</h3>
+    <div class="legend">
+      <span><i style="background:#3E7A52"></i>&lt; 200 kcal　低</span>
+      <span><i style="background:#C0703A"></i>200–400　中</span>
+      <span><i style="background:#B04A33"></i>&gt; 400　高</span>
+    </div>
+    <p style="margin-top:11px;">这三档色是「数据语义」，跟着热量走，不会因为你换主题而变。好处是养成肌肉记忆之后，扫一眼颜色就知道这桌菜重不重，不用读数字。</p>
+  </div>
+</div>
+
+<p class="foot">
+  这是 HTML 视觉稿（iPhone 375pt 宽模拟），不是小程序真实渲染。定稿后我用 WXSS 重写一遍，字体、行高、点击区按微信原生控件再校一次。<br>
+  色块代替照片：真机上换成你自己的菜照，01 的优势会更明显（墨黑 + 素米不会给照片染色），03 的绿色则需要看你的照片色温能不能扛住。
+</p>
+
+</body>
+</html>
