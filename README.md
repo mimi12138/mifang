@@ -14,6 +14,8 @@
 app.js / app.json / app.wxss    入口与全局样式
 data/ingredients.js             食材库（别名、每 100g 热量、单重）
 data/spoons.js                  勺重表、调料清单
+data/seed.js                    内置菜谱（首次安装且库为空时铺进去，生成文件）
+assets/covers/                  内置菜谱的封面图（750 宽压缩图；实拍照片，不进公开仓库）
 utils/store.js                  数据层唯一出口（菜谱 / 一桌 / 设置 / 备份）
 utils/nutrition.js              热量计算、用量文本
 utils/units.js                  单位归一、数量解析

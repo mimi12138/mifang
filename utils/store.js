@@ -4,11 +4,18 @@
  * 将来要搬云端，只改这一个文件
  */
 
+const seed = require('../data/seed.js')
+
 const KEY_RECIPES = 'mf_recipes'
 const KEY_MEALS = 'mf_meals'
 const KEY_SETTINGS = 'mf_settings'
 const KEY_VERSION = 'mf_version'
 const KEY_SNAP_ASKED = 'mf_snap_asked'
+const KEY_SEED = 'mf_seed'
+const KEY_SEED_COVER = 'mf_seed_cover'
+// 内置封面补丁版本：每次给内置菜谱新增封面图就 +1
+// v1 只有 8 张 → v2 补凉拌土豆丝、馄饨馅 → v3 补鸡蛋酱
+const SEED_COVER_V = 3
 
 const VERSION = 1
 
@@ -69,6 +76,72 @@ function saveSettings(patch) {
 function getQuality() {
   const s = getSettings()
   return QUALITY[s.imageQuality] || QUALITY.standard
+}
+
+/* ───────────── 内置菜谱 ───────────── */
+
+/**
+ * 首次安装（或整个沙箱被清空）时，把内置菜谱铺进库
+ * - 库里有东西就只打标记，绝不动现有数据
+ * - 打过标记之后，以后她把菜删光也不会再长回来
+ * @returns {number} 写进去几条；0 表示这次没动
+ */
+function seedIfEmpty() {
+  if (wx.getStorageSync(KEY_SEED)) return 0
+
+  if (getRecipes().length) {
+    wx.setStorageSync(KEY_SEED, seed.version)
+    return 0
+  }
+
+  const src = seed.recipes || []
+  if (!src.length) return 0
+
+  const now = Date.now()
+  const list = clone(src).map((r, i) => {
+    const t = now - (src.length - i) * 60000
+    return Object.assign({}, r, {
+      cookedCount: r.cookedCount || 0,
+      lastCookedAt: r.lastCookedAt || 0,
+      createdAt: t,
+      updatedAt: t
+    })
+  })
+
+  wx.setStorageSync(KEY_RECIPES, list)
+  wx.setStorageSync(KEY_SEED, seed.version)
+  // 不写快照：内置菜谱随时能重建，写进去只会让「本机备份」看起来像有她的数据
+  return list.length
+}
+
+/**
+ * 给「已经存在但封面为空」的内置菜谱补上封面
+ * 只跑一次：老版本先导入过菜谱的人（封面是空的）也能看到图；
+ * 补过之后你自己把封面删了，不会再被塞回来
+ * @returns {number} 补了几条
+ */
+function fillSeedCovers() {
+  // 存版本号而不是布尔：以后内置菜谱再加新图，把 SEED_COVER_V 加一，
+  // 启动时就会把「库里还没有封面」的那几条补上，补过的不会重复动
+  if (Number(wx.getStorageSync(KEY_SEED_COVER) || 0) >= SEED_COVER_V) return 0
+
+  const map = {}
+  ;(seed.recipes || []).forEach((r) => {
+    if (r.cover) map[r.id] = r.cover
+  })
+
+  const list = getRecipes()
+  let n = 0
+  list.forEach((r) => {
+    if (!r.cover && map[r.id]) {
+      r.cover = map[r.id]
+      n++
+    }
+  })
+
+  if (n) wx.setStorageSync(KEY_RECIPES, list)
+  wx.setStorageSync(KEY_SEED_COVER, SEED_COVER_V)
+  return n
 }
 
 /* ───────────── 菜谱 ───────────── */
@@ -413,14 +486,22 @@ function importBackup(text) {
     return { ok: false, recipes: 0, meals: 0, message: '这不是蜜方的备份文件' }
   }
 
-  // 导入前清掉现有图片，避免堆积无主文件
-  listImageFiles().forEach((f) => removeFile(f.path))
-
+  // 不要无脑删图：在同一个沙箱里导入自己的备份时，recipes 里的 cover
+  // 指向的就是这些文件，先删等于把封面全弄成死链。
+  // 改成导入完成后按「谁还被引用」清一次孤儿图。
   wx.setStorageSync(KEY_RECIPES, data.recipes)
   wx.setStorageSync(KEY_MEALS, Array.isArray(data.meals) ? data.meals : [])
+  // 导入过的数据说了算：以后库空了也别再往里塞内置菜谱
+  wx.setStorageSync(KEY_SEED, seed.version)
   if (data.settings) {
     wx.setStorageSync(KEY_SETTINGS, Object.assign(getSettings(), data.settings))
   }
+  cleanOrphanImages()
+
+  // 导进来的这份数据可能压根没封面（旧备份、手工整理的 json）。
+  // 内置菜谱的封面在代码里，不是数据，所以重跑一遍补齐：只填空的，已有的一律不动。
+  wx.removeStorageSync(KEY_SEED_COVER)
+  fillSeedCovers()
 
   return {
     ok: true,
@@ -430,7 +511,7 @@ function importBackup(text) {
   }
 }
 
-/** 清空全部数据（含图片） */
+/** 清空全部数据（含图片）—— 内置菜谱的标记故意不删，清空了就该是空的 */
 function clearAll() {
   listImageFiles().forEach((f) => removeFile(f.path))
   wx.setStorageSync(KEY_RECIPES, [])
@@ -452,6 +533,8 @@ module.exports = {
   getQuality,
   getRecipes,
   getRecipe,
+  seedIfEmpty,
+  fillSeedCovers,
   emptyRecipe,
   saveRecipe,
   deleteRecipe,

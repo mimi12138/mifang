@@ -74,9 +74,11 @@ Page({
   },
 
   previewCover() {
-    if (this.data.recipe && this.data.recipe.cover) {
-      wx.previewImage({ urls: [this.data.recipe.cover] })
-    }
+    const cover = this.data.recipe && this.data.recipe.cover
+    if (!cover) return
+    // 内置封面是代码包里的路径，previewImage 在部分机型上不认，别硬弹
+    if (cover.charAt(0) === '/') return
+    wx.previewImage({ urls: [cover], fail: () => {} })
   },
 
   goBack() {
