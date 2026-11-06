@@ -1,13 +1,11 @@
 # 微信开发者工具的本地私有配置（含本机路径、编译设置）
 project.private.config.json
 
-# 设计稿里的私人菜品照片，公开仓库不传（中文名、food-* 都覆盖）
+# 设计稿里的私人菜品照片原图，公开仓库不传（中文名、food-* 都覆盖）
+# 注：assets/covers 下压过的封面图是要进仓库的，别一起拦了
 design/*.jpg
 design/*.jpeg
 design/*.png
-
-# 内置封面（她拍的菜品照，压过的小图），公开仓库不传
-assets/covers/*.jpg
 
 # 系统与临时文件
 .DS_Store
