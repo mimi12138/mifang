@@ -2,11 +2,21 @@
 
   <!-- 顶部工具（往下让开右上角系统胶囊） -->
   <view class="top" style="padding-top:{{navPad}}px">
-    <view class="close" bindtap="exit" hover-class="hover-dim"></view>
-    <view class="tools">
-      <view class="tool" bindtap="toggleFont" hover-class="hover-dim">字号</view>
-      <view class="tool" bindtap="openMaterials" hover-class="hover-dim">用料</view>
+    <view class="top-row">
+      <view class="close" bindtap="exit" hover-class="hover-dim"></view>
+      <view class="pager">
+        <text class="pager-cur">{{index + 1}}</text><text class="pager-all">/ {{steps.length}}</text>
+      </view>
+      <view class="tools">
+        <view class="tool" bindtap="toggleFont" hover-class="hover-dim">字号</view>
+        <view class="tool" bindtap="openMaterials" hover-class="hover-dim">用料</view>
+      </view>
     </view>
+  </view>
+
+  <!-- 进度条 -->
+  <view class="bar">
+    <view class="bar-fill" style="width:{{progress}}%"></view>
   </view>
 
   <!-- 步骤 -->
@@ -16,10 +26,6 @@
     bindtouchstart="onTouchStart"
     bindtouchend="onTouchEnd"
   >
-    <view class="pager">
-      <text class="pager-cur">{{index + 1}}</text>
-      <text class="pager-all">/ {{steps.length}}</text>
-    </view>
     <scroll-view scroll-y class="txt-wrap">
       <view class="txt-inner">
         <view class="txt" style="font-size:{{fontSize * 2}}rpx">{{steps[index].text}}</view>

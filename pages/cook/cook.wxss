@@ -12,35 +12,84 @@
 .hover-dim { opacity: .7; }
 
 /* ── 顶部 ── */
+/* 外层只负责往下让开系统胶囊，行内元素的对齐交给 .top-row，
+   否则绝对居中的步骤计数会按「含 padding 的高度」算中心，整体偏下 */
 .top {
-  /* 高度交给内容撑：外层还会用内联 padding-top 让开系统胶囊 */
+  flex: none;
+}
+
+.top-row {
+  position: relative;
   min-height: 96rpx;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex: none;
 }
 
 .close {
-  width: 64rpx;
-  height: 64rpx;
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 50%;
+  border: 1rpx solid rgba(221, 228, 210, .3);
   position: relative;
+  flex: none;
 }
 
 .close::before,
 .close::after {
   content: '';
   position: absolute;
-  left: 14rpx;
-  top: 30rpx;
-  width: 36rpx;
-  height: 3rpx;
-  background: rgba(221, 228, 210, .8);
-  border-radius: 3rpx;
+  left: 50%;
+  top: 50%;
+  width: 22rpx;
+  height: 2rpx;
+  background: rgba(221, 228, 210, .85);
+  border-radius: 2rpx;
 }
 
-.close::before { transform: rotate(45deg); }
-.close::after { transform: rotate(-45deg); }
+.close::before { transform: translate(-50%, -50%) rotate(45deg); }
+.close::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+/* 步骤计数：绝对居中，不跟着左右两边的宽度漂 */
+.pager {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 0;
+  display: flex;
+  align-items: baseline;
+  pointer-events: none;
+}
+
+.pager-cur {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #DDE4D2;
+  font-variant-numeric: tabular-nums;
+}
+
+.pager-all {
+  font-size: 24rpx;
+  color: rgba(221, 228, 210, .45);
+  margin-left: 8rpx;
+}
+
+/* ── 顶部进度条 ── */
+.bar {
+  flex: none;
+  height: 2rpx;
+  border-radius: 2rpx;
+  background: rgba(221, 228, 210, .14);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 2rpx;
+  background: rgba(221, 228, 210, .75);
+  transition: width .26s ease;
+}
 
 .tools {
   display: flex;
@@ -77,25 +126,6 @@
   display: flex;
   align-items: center;
   padding: 20rpx 0;
-}
-
-.pager {
-  display: flex;
-  align-items: baseline;
-  margin-bottom: 40rpx;
-}
-
-.pager-cur {
-  font-size: 34rpx;
-  font-weight: 700;
-  color: #DDE4D2;
-  font-variant-numeric: tabular-nums;
-}
-
-.pager-all {
-  font-size: 24rpx;
-  color: rgba(221, 228, 210, .45);
-  margin-left: 10rpx;
 }
 
 .txt {

@@ -8,6 +8,7 @@ Page({
     recipe: null,
     steps: [],
     index: 0,
+    progress: 0,
     fontSize: 24,
     showMaterials: false,
     materials: [],
@@ -61,8 +62,15 @@ Page({
       recipe: r,
       steps,
       materials: calc.groups,
-      cookedCount: r.cookedCount || 0
+      cookedCount: r.cookedCount || 0,
+      progress: this.barPercent(0, steps.length)
     })
+  },
+
+  /* 进度条百分比：走到第几步算第几格，最后一步满格 */
+  barPercent(index, total) {
+    if (!total) return 0
+    return Math.round(((index + 1) / total) * 100)
   },
 
   onTouchStart(e) {
@@ -90,21 +98,23 @@ Page({
     if (this.data.index >= last) {
       // 最后一屏再往左滑就停住：手滑一下不该直接把菜做成「收工」
       if (swipe) return
-      this.setData({ done: true })
+      this.setData({ done: true, progress: 100 })
       return
     }
-    this.setData({ index: this.data.index + 1 })
+    const i = this.data.index + 1
+    this.setData({ index: i, progress: this.barPercent(i, this.data.steps.length) })
   },
 
   prev() {
     if (this.data.index <= 0) return
-    this.setData({ index: this.data.index - 1 })
+    const i = this.data.index - 1
+    this.setData({ index: i, progress: this.barPercent(i, this.data.steps.length) })
   },
 
   /* 收工页也能退回最后一步，免得误触后只能重进 */
   backToStep() {
     const last = Math.max(0, this.data.steps.length - 1)
-    this.setData({ done: false, index: last })
+    this.setData({ done: false, index: last, progress: this.barPercent(last, this.data.steps.length) })
   },
 
   toggleFont() {
