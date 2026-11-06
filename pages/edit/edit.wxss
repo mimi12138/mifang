@@ -316,33 +316,30 @@
 
 .item.first { border-top: 0; }
 
-/* 不用 flex：原生 textarea 在 flex + width:0 下量不出宽度，
-   新插入时会按错误宽度算高度，先撑成一大块白框再慢慢收回 */
+/* 结构和步骤区保持一致（真机上「+ 加一步」不闪，用料区闪）：
+   flex 行 + 输入框 flex:1 / width:auto，不写 max-height、不写 overflow。
+   原生 textarea 带 max-height 时，插入瞬间会先按最大高度铺一次再收回。 */
 .i-top {
-  position: relative;
+  display: flex;
+  align-items: flex-start;
 }
 
 /* 食材名改成可换行的多行输入：长句（如整句腌料）也能看全 */
 .i-name {
-  display: block;
-  width: 100%;
-  height: auto;
+  flex: 1;
+  width: auto;
   min-height: 60rpx;
-  max-height: 260rpx;
   font-size: 30rpx;
   line-height: 52rpx;
   color: var(--t1);
-  padding: 4rpx 60rpx 4rpx 0;
+  padding: 4rpx 0;
   margin: 0;
   background: transparent;
   border: none;
-  overflow: visible;
 }
 
 .i-del {
-  position: absolute;
-  top: 0;
-  right: 0;
+  flex: none;
   width: 56rpx;
   height: 56rpx;
   line-height: 52rpx;
