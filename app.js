@@ -16,6 +16,8 @@ App({
     store.init()
     this.globalData.settings = store.getSettings()
     this.checkSnapshot()
+    // 内置菜谱后来加了新菜：补进库（追加，不覆盖她自己录的）
+    if (store.syncSeedRecipes()) this.refreshTop()
     store.fillSeedCovers()
   },
 

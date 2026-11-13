@@ -13,6 +13,8 @@ const KEY_VERSION = 'mf_version'
 const KEY_SNAP_ASKED = 'mf_snap_asked'
 const KEY_SEED = 'mf_seed'
 const KEY_SEED_COVER = 'mf_seed_cover'
+// 她自己删掉过的内置菜谱 id：以后内置菜谱加新条目时，这些不再补回来
+const KEY_SEED_DELETED = 'mf_seed_deleted'
 // 内置封面补丁版本：每次给内置菜谱新增封面图就 +1
 // v1 只有 8 张 → v2 补凉拌土豆丝、馄饨馅 → v3 补鸡蛋酱
 const SEED_COVER_V = 3
@@ -112,6 +114,42 @@ function seedIfEmpty() {
   wx.setStorageSync(KEY_SEED, seed.version)
   // 不写快照：内置菜谱随时能重建，写进去只会让「本机备份」看起来像有她的数据
   return list.length
+}
+
+/**
+ * 把「内置菜谱里有、库里没有」的补进库，追加在末尾
+ * 用途：以后往内置菜谱里加了新菜，装过旧版的人不用重装也能拿到
+ * - 不覆盖、不改动已有条目
+ * - 她自己删过的内置菜（记在 KEY_SEED_DELETED）不再补回来
+ * @returns {number} 补了几条
+ */
+function syncSeedRecipes() {
+  const src = seed.recipes || []
+  if (!src.length) return 0
+
+  const list = getRecipes()
+  if (!list.length) return 0 // 空库交给 seedIfEmpty，这里不抢
+
+  const have = {}
+  list.forEach((r) => {
+    have[r.id] = 1
+  })
+
+  const gone = wx.getStorageSync(KEY_SEED_DELETED) || []
+  const add = clone(src).filter((r) => !have[r.id] && gone.indexOf(r.id) < 0)
+  if (!add.length) return 0
+
+  const now = Date.now()
+  add.forEach((r, i) => {
+    r.cookedCount = r.cookedCount || 0
+    r.lastCookedAt = r.lastCookedAt || 0
+    r.createdAt = now - i * 1000
+    r.updatedAt = r.createdAt
+  })
+
+  wx.setStorageSync(KEY_RECIPES, list.concat(add))
+  autoSnapshot()
+  return add.length
 }
 
 /**
@@ -219,6 +257,15 @@ function deleteRecipe(id) {
   })
 
   wx.setStorageSync(KEY_RECIPES, list.filter((r) => r.id !== id))
+
+  // 删的是内置菜谱就记一笔，免得下次启动又被 syncSeedRecipes 塞回来
+  if ((seed.recipes || []).some((r) => r.id === id)) {
+    const gone = wx.getStorageSync(KEY_SEED_DELETED) || []
+    if (gone.indexOf(id) < 0) {
+      gone.push(id)
+      wx.setStorageSync(KEY_SEED_DELETED, gone)
+    }
+  }
 
   // 一桌里引用的快照保留，只标记菜谱已删
   const meals = getMeals()
@@ -534,6 +581,7 @@ module.exports = {
   getRecipes,
   getRecipe,
   seedIfEmpty,
+  syncSeedRecipes,
   fillSeedCovers,
   emptyRecipe,
   saveRecipe,
